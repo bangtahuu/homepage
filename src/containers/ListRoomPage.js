@@ -1,8 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {forEach} from "react-bootstrap/esm/utils/ElementChildren";
-import {Card,Button, Form, Row, Col, FormControl, FormCheck} from 'react-bootstrap';
-import { Dropdown } from 'semantic-ui-react'
+// import {Card,Button, Form, Row, Col, FormControl, FormCheck} from 'react-bootstrap';
+import {Form} from 'semantic-ui-react';
+import {Button, Card, Image} from 'semantic-ui-react';
+import { Input } from 'semantic-ui-react';
+import { Icon, Label } from 'semantic-ui-react'
+
+const options = [
+    {key: 'm', text: 'Male', value: 'male'},
+    {key: 'f', text: 'Female', value: 'female'},
+    {key: 'o', text: 'Other', value: 'other'},
+]
 
 export class ListRoomPage extends React.Component {
     constructor(props) {
@@ -24,7 +32,6 @@ export class ListRoomPage extends React.Component {
         this.getListRoom = this.getListRoom.bind(this);
         this.setListRoom = this.setListRoom.bind(this);
     }
-
 
 
     getListRoom() {
@@ -80,148 +87,60 @@ export class ListRoomPage extends React.Component {
     }
 
     render() {
-        const friendOptions = [
-            {
-                key: 'Jenny Hess',
-                text: 'Jenny Hess',
-                value: 'Jenny Hess',
-                image: {avatar: true, src: '/images/avatar/small/jenny.jpg'},
-            },
-            {
-                key: 'Elliot Fu',
-                text: 'Elliot Fu',
-                value: 'Elliot Fu',
-                image: {avatar: true, src: '/images/avatar/small/elliot.jpg'},
-            },
-            {
-                key: 'Stevie Feliciano',
-                text: 'Stevie Feliciano',
-                value: 'Stevie Feliciano',
-                image: {avatar: true, src: '/images/avatar/small/stevie.jpg'},
-            },
-        ];
 
         return (
             <div>
-
                 <Form>
-                    <Row>
-                        <Col>
-                            <Form.Group controlId="formBasicEmail">
-                                <Form.Label>Email address</Form.Label>
+                    <Input fluid action='Search' placeholder='Search...' />
+                    <br/>
+                    <Form.Group widths='equal'>
+                        <Form.Select
+                            fluid
+                            label='RoomID'
+                            options={options}
+                            placeholder='Gender'
+                        />
+                        <Form.Select
+                            fluid
+                            label='Status'
+                            options={options}
+                            placeholder='Gender'
+                        />
+                    </Form.Group>
 
-                            </Form.Group>
-                        </Col>
-                        <Col>
-                            <Form.Group controlId="formBasicPassword">
-                                <Dropdown
-                                    placeholder='Select Friend'
-                                    fluid
-                                    selection
-                                    options={friendOptions}
-                                />
-                            </Form.Group>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <Form.Control type="email" placeholder="Enter email"/>
-                        </Col>
-                        <Col>
-                            <Form.Control type="password" placeholder="Password"/>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <Button variant="primary" type="submit">
-                                Submit
-                            </Button>
-                        </Col>
-                        <Col/>
-                    </Row>
+                    {/*<Button*/}
+                    {/*    primary*/}
+                    {/*    attached='bottom'*/}
+                    {/*    onClick={this.getListRoom}>*/}
+                    {/*    Search*/}
+                    {/*</Button>*/}
                 </Form>
-                <div className="row">
-                    <div className="col-3 col-12-mobile">
-                        <article className="item">
-                            <div className="image fitfull">
-                                <a className="image fit"><img src="images/hotelico.jpeg" alt="Hotel"/></a>
+                <br/><br/>
+                <Card.Group>
+                    <Card>
+                        <Card.Content>
+                            <Image
+                                floated='right'
+                                size='mini'
+                                src='/images/hotelico.jpeg'
+                            />
+                            <Card.Header>Room 101</Card.Header>
+                            <Card.Meta>Tang 1</Card.Meta>
+                            <Card.Description>
+                                Steve wants to add you to the group <strong>best friends</strong>
+                            </Card.Description>
+                        </Card.Content>
+                        <Card.Content extra>
+                            <div className='ui one buttons'>
+                                <Button basic color='green'>
+                                    CheckIn
+                                </Button>
+
                             </div>
-                            <header>
-                                <h3>Room 101</h3>
-                            </header>
-                        </article>
-                    </div>
-                    <div className="col-3 col-12-mobile">
-                        <article className="item">
-                            <div className="image fitfull">
-                                <a className="image fit"><img src="images/hotelico.jpeg" alt="Hotel"/></a>
-                            </div>
-                            <header>
-                                <h3>Room 101</h3>
-                            </header>
-                        </article>
-                    </div>
-                    <div className="col-3 col-12-mobile">
-                        <article className="item">
-                            <div className="image fitfull">
-                                <a className="image fit"><img src="images/hotelico.jpeg" alt="Hotel"/></a>
-                            </div>
-                            <header>
-                                <h3>Room 101</h3>
-                            </header>
-                        </article>
-                    </div>
-                    <div className="col-3 col-12-mobile">
-                        <article className="item">
-                            <div className="image fitfull">
-                                <a className="image fit"><img src="images/hotelico.jpeg" alt="Hotel"/></a>
-                            </div>
-                            <header>
-                                <h3>Room 101</h3>
-                            </header>
-                        </article>
-                    </div>
-                    <div className="col-3 col-12-mobile">
-                        <article className="item">
-                            <div className="image fitfull">
-                                <a className="image fit"><img src="images/hotelico.jpeg" alt="Hotel"/></a>
-                            </div>
-                            <header>
-                                <h3>Room 101</h3>
-                            </header>
-                        </article>
-                    </div>
-                    <div className="col-3 col-12-mobile">
-                        <article className="item">
-                            <div className="image fitfull">
-                                <a className="image fit"><img src="images/hotelico.jpeg" alt="Hotel"/></a>
-                            </div>
-                            <header>
-                                <h3>Room 101</h3>
-                            </header>
-                        </article>
-                    </div>
-                    <div className="col-3 col-12-mobile">
-                        <article className="item">
-                            <div className="image fitfull">
-                                <a className="image fit"><img src="images/hotelico.jpeg" alt="Hotel"/></a>
-                            </div>
-                            <header>
-                                <h3>Room 101</h3>
-                            </header>
-                        </article>
-                    </div>
-                    <div className="col-3 col-12-mobile">
-                        <article className="item">
-                            <div className="image fitfull">
-                                <a className="image fit"><img src="images/hotelico.jpeg" alt="Hotel"/></a>
-                            </div>
-                            <header>
-                                <h3>Room 101</h3>
-                            </header>
-                        </article>
-                    </div>
-                </div>
+                        </Card.Content>
+                    </Card>
+
+                </Card.Group>
             </div>
         );
     }
