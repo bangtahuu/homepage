@@ -4,12 +4,13 @@ import ReactDOM from 'react-dom';
 import {Form} from 'semantic-ui-react';
 import {Button, Card, Image} from 'semantic-ui-react';
 import { Input } from 'semantic-ui-react';
-import { Icon, Label } from 'semantic-ui-react'
+import { Icon, Label } from 'semantic-ui-react';
+import { Loader, Segment } from 'semantic-ui-react'
 
 const options = [
-    {key: 'm', text: 'Male', value: 'male'},
-    {key: 'f', text: 'Female', value: 'female'},
-    {key: 'o', text: 'Other', value: 'other'},
+    {key: '0', text: 'Not Avaiable', value: '0'},
+    {key: '1', text: 'Avaiable', value: '1'},
+    {key: '2', text: 'Cleaning', value: '2'},
 ]
 
 export class ListRoomPage extends React.Component {
@@ -27,27 +28,44 @@ export class ListRoomPage extends React.Component {
                 isICMCenter: '',
             },
             rooms: [],
+            roomIds: [],
+            roomidselected: '',
         };
 
-        this.getListRoom = this.getListRoom.bind(this);
-        this.setListRoom = this.setListRoom.bind(this);
+        [
+            'getListRoomDetails',
+            'setListRoom',
+            'handleChangeRoomIDs',
+        ].forEach((method) => this[method] = this[method].bind(this));
     }
 
 
-    getListRoom() {
+
+    getListRoomDetails() {
         // fetch("https://script.google.com/macros/s/AKfycby1NCjArXNvliviV9Su8imyfVXsNTUL2memG4bxJhX4JTcyoXGr/exec?func=listoption")
-        fetch("https://script.google.com/macros/s/AKfycby1NCjArXNvliviV9Su8imyfVXsNTUL2memG4bxJhX4JTcyoXGr/exec?func=listRooms")
+        fetch("https://script.google.com/macros/s/AKfycby1NCjArXNvliviV9Su8imyfVXsNTUL2memG4bxJhX4JTcyoXGr/exec?func=listRoomsDetail")
             .then(res => res.json())
             .then(
                 (result) => {
+                    let strs = [];
+                    let ids = [];
+                    let tmp = [];
+                    let tmp2 = {};
+                    for (let i =0;i< result.length;i++){
+                        tmp = JSON.parse(result[i])
+                        strs.push(tmp);
+                        tmp2= {};
+                        tmp2['key'] = tmp['roomid'];
+                        tmp2['text'] = tmp['roomDescription'];
+                        tmp2['value'] = tmp['roomid'];
+                        ids.push(tmp2);
+                    }
                     this.setState({
                         isLoaded: true,
                         // rooms: result,
-                        rooms: result
+                        rooms: strs,
+                        roomIds: ids
                     });
-
-                    console.log(result[0]);
-
                 }, (error) => {
                     this.setState({
                         isLoaded: true,
@@ -86,19 +104,42 @@ export class ListRoomPage extends React.Component {
         });
     }
 
-    render() {
+    handleChangeRoomIDs (event, val = null) {
+        if(val == null)
+            return;
+        this.setState({
+            roomidselected: val['value']
+        });
+    }
 
+    componentDidMount() {
+        this.getListRoomDetails();
+    }
+
+    render() {
+        if(this.state.isLoaded == false) {
+            return (<Segment>
+                        <Loader active/>
+
+                        <Image src='https://react.semantic-ui.com/images/wireframe/short-paragraph.png'/>
+                    </Segment>);
+        }
+        // console.log(this.state.roomIds);
+        // console.log(this.state.rooms);
+        console.log(this.state.roomidselected);
+        const listRoomIds= this.state.roomIds;
         return (
             <div>
                 <Form>
-                    <Input fluid action='Search' placeholder='Search...' />
+                    <Input fluid icon='search' action='Search' placeholder='Search...' />
                     <br/>
                     <Form.Group widths='equal'>
                         <Form.Select
                             fluid
                             label='RoomID'
-                            options={options}
-                            placeholder='Gender'
+                            onChange={this.handleChangeRoomIDs}
+                            options={listRoomIds}
+                            placeholder='IDs'
                         />
                         <Form.Select
                             fluid
@@ -122,7 +163,7 @@ export class ListRoomPage extends React.Component {
                             <Image
                                 floated='right'
                                 size='mini'
-                                src='/images/hotelico.jpeg'
+                                src='images/hotelico.jpeg'
                             />
                             <Card.Header>Room 101</Card.Header>
                             <Card.Meta>Tang 1</Card.Meta>
