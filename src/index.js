@@ -10,6 +10,7 @@ import 'semantic-ui-css/semantic.min.css'
 class ThaiBinhHotel extends React.Component{
     render(){
         return <IndexPage/>;
+        // return <div>aaa</div>;
     }
 }
 

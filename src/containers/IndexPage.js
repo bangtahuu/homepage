@@ -1,10 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-// import {Card,Button, Form, Row, Col, FormControl, FormCheck} from 'react-bootstrap';
 import {Form} from 'semantic-ui-react';
 import {Button, Card, Image} from 'semantic-ui-react';
 import {Input} from 'semantic-ui-react';
-import {Icon, Label} from 'semantic-ui-react';
 import {Loader, Segment} from 'semantic-ui-react'
 import {ListRoomRows} from '../components/ListRoomRows'
 import { Dimmer } from 'semantic-ui-react'
