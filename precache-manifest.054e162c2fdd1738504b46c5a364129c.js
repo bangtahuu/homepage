@@ -1,23 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "0513f323930251f2ed975804b33b89c2",
+    "revision": "d30d0be087cd9a5026c5d53e4f449910",
     "url": "/hotel/index.html"
   },
   {
-    "revision": "8a38a41b9f50185ce19e",
-    "url": "/hotel/static/css/2.65118d56.chunk.css"
+    "revision": "f15773d3dc122dab1170",
+    "url": "/hotel/static/css/2.cef17f63.chunk.css"
   },
   {
-    "revision": "0f6ed403b0490d9011b6",
+    "revision": "df9b8ff91e0e88857beb",
     "url": "/hotel/static/css/main.34de6062.chunk.css"
   },
   {
-    "revision": "8a38a41b9f50185ce19e",
-    "url": "/hotel/static/js/2.5afc9878.chunk.js"
+    "revision": "f15773d3dc122dab1170",
+    "url": "/hotel/static/js/2.76994ba8.chunk.js"
   },
   {
-    "revision": "0f6ed403b0490d9011b6",
-    "url": "/hotel/static/js/main.0f7de00c.chunk.js"
+    "revision": "df9b8ff91e0e88857beb",
+    "url": "/hotel/static/js/main.305007d6.chunk.js"
   },
   {
     "revision": "c4f876dd50c47355d1dd",
@@ -68,6 +68,10 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/hotel/static/media/icons.faff9214.woff"
   },
   {
+    "revision": "a770b6797b68e3f8920e473eb824bac0",
+    "url": "/hotel/static/media/loader-big.a770b679.gif"
+  },
+  {
     "revision": "701ae6abd4719e9c2ada3535a497b341",
     "url": "/hotel/static/media/outline-icons.701ae6ab.eot"
   },
@@ -86,5 +90,21 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "ef60a4f6c25ef7f39f2d25a748dbecfe",
     "url": "/hotel/static/media/outline-icons.ef60a4f6.woff"
+  },
+  {
+    "revision": "12f0820c451bdc75f4d1ef97732bf6e8",
+    "url": "/hotel/static/media/rw-widgets.12f0820c.woff"
+  },
+  {
+    "revision": "792dcd18baf5f544aabcad1883d673c2",
+    "url": "/hotel/static/media/rw-widgets.792dcd18.svg"
+  },
+  {
+    "revision": "bc7c4a59f924cf037aad6e1f9edba366",
+    "url": "/hotel/static/media/rw-widgets.bc7c4a59.eot"
+  },
+  {
+    "revision": "eceddf474df95d8d4a7e316668c3be85",
+    "url": "/hotel/static/media/rw-widgets.eceddf47.ttf"
   }
 ]);
