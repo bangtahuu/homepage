@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import {ListRoomPage} from './containers/ListRoomPage';
+import {IndexPage} from './containers/IndexPage';
 import * as serviceWorker from './serviceWorker';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'semantic-ui-css/semantic.min.css'
@@ -9,7 +9,7 @@ import 'semantic-ui-css/semantic.min.css'
 
 class ThaiBinhHotel extends React.Component{
     render(){
-        return <ListRoomPage/>;
+        return <IndexPage/>;
     }
 }
 
