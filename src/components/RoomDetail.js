@@ -14,7 +14,8 @@ export class RoomDetail extends React.Component{
     }
 
     redirectLink(){
-        window.location.href = "http://localhost:3000/";
+        let link =window.location.href;
+        window.location.href = link;
     }
 
     render(){
