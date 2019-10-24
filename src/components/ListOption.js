@@ -103,7 +103,7 @@ export class ListOption extends React.Component {
                         onClick={this.handleAdd}
                     />
                 </Button.Group>
-                <TableBT striped bordered hover style={{width: '100%'}}>
+                <TableBT size="sm" striped bordered hover style={{width: '100%'}}>
                     <thead>
                     <tr>
                         <th></th>
@@ -131,7 +131,7 @@ export class ListOption extends React.Component {
                                         <hr/>
                                         <p>Số tiền/1 sp: <b>{formatNumber(this.state.optionListSelected[count].price)} VND</b></p>
                                         <div hidden>{count = count + 1}</div>
-                                        <hr/>
+                                        <hr style={{borderWidth: '5px'}}/>
                                     </div>
                                 ) :
                                     (
@@ -150,7 +150,7 @@ export class ListOption extends React.Component {
                                             <hr/>
                                             <p>Số tiền/1 sp: <b>{formatNumber(0)} VND</b></p>
                                             <div hidden>{count = count + 1}</div>
-                                            <hr/>
+                                            <hr style={{borderWidth: '5px'}}/>
                                         </div>
                                     )
                                 }
