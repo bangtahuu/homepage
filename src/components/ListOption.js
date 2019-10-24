@@ -131,31 +131,29 @@ export class ListOption extends React.Component {
                                         <hr/>
                                         <p>Số tiền/1 sp: <b>{formatNumber(this.state.optionListSelected[count].price)} VND</b></p>
                                         <div hidden>{count = count + 1}</div>
+                                        <hr/>
                                     </div>
                                 ) :
-                                    (<Segment>
-                                        <Dimmer active inverted>
-                                            <Loader size='large'>Loading</Loader>
-                                        </Dimmer>
-                                        <Image src='images/loader.png'/>
-                                    </Segment>)
+                                    (
+                                        <div>
+                                            <label><b>Loại SP:</b></label><br/>
+                                            <Dropdown
+                                                key={item}
+                                                onChange={this.handleChange}
+                                                options={this.state.listoptionIds}
+                                                placeholder='Choose an option'
+                                                selection
+                                            />
+                                            <hr/>
+                                            <label><b>Số lượng:</b></label><br/>
+                                            <Input type="number" value={1}/>
+                                            <hr/>
+                                            <p>Số tiền/1 sp: <b>{formatNumber(0)} VND</b></p>
+                                            <div hidden>{count = count + 1}</div>
+                                            <hr/>
+                                        </div>
+                                    )
                                 }
-                                {/*<label><b>Loại SP:</b></label><br/>*/}
-                                {/*<Dropdown*/}
-                                {/*    key={item}*/}
-                                {/*    onChange={this.handleChange}*/}
-                                {/*    options={this.state.listoptionIds}*/}
-                                {/*    placeholder='Choose an option'*/}
-                                {/*    selection*/}
-                                {/*/>*/}
-                                {/*<hr/>*/}
-                                {/*<label><b>Số lượng:</b></label><br/>*/}
-                                {/*<Input type="number"/>*/}
-                                {/*<hr/>*/}
-
-                                {/*/!*<p>Số tiền/1 sp: <b>{formatNumber(item.price)} VND</b></p>*!/*/}
-                                {/*<p>Số tiền/1 sp: <b>{formatNumber((optionListSelected && optionListSelected[count]) ? optionListSelected[count].price : 0 )} VND</b></p>*/}
-                                {/*<div hidden>{count = count + 1}</div>*/}
                             </td>
                         </tr>
                     ))}
