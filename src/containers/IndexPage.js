@@ -3,9 +3,10 @@ import ReactDOM from 'react-dom';
 import {Form} from 'semantic-ui-react';
 import {Button, Card, Image} from 'semantic-ui-react';
 import {Input} from 'semantic-ui-react';
-import {Loader, Segment} from 'semantic-ui-react'
-import {ListRoomRows} from '../components/ListRoomRows'
-import { Dimmer } from 'semantic-ui-react'
+import {Loader, Segment} from 'semantic-ui-react';
+import {ListRoomRows} from '../components/ListRoomRows';
+import { Dimmer } from 'semantic-ui-react';
+import 'semantic-ui-css/semantic.min.css';
 
 
 export class IndexPage extends React.Component {
@@ -13,19 +14,14 @@ export class IndexPage extends React.Component {
         super(props);
         this.state = {
             isLoaded: false,
-            room: {
-                Name: '',
-                Company: '',
-                Phone: '',
-                Product: '',
-                Company_Address: '',
-                RangeIncome: '',
-                isICMCenter: '',
-            },
             rooms: [],
             roomIds: [],
             status: [],
             statusIds: [],
+            roomTypeOther: [],
+            roomTypeOtherIds: [],
+            listoption: [],
+            listoptionIds: [],
             roomidselected: '',
             statusSelected: ''
         };
@@ -37,7 +33,9 @@ export class IndexPage extends React.Component {
             'handleChangeStatusIDSelect',
             'getListStatus',
             'renderSearchForm',
-            'renderListRooms'
+            'renderListRooms',
+            'getroomTypeOther',
+            'getlistoption'
         ].forEach((method) => this[method] = this[method].bind(this));
     }
 
@@ -103,6 +101,66 @@ export class IndexPage extends React.Component {
             )
     }
 
+    getlistoption() {
+        fetch("https://script.google.com/macros/s/AKfycby1NCjArXNvliviV9Su8imyfVXsNTUL2memG4bxJhX4JTcyoXGr/exec?func=listoption")
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    let strs = [];
+                    let ids = [];
+                    let tmp = [];
+                    let tmp2 = {};
+                    for (let i = 0; i < result.length; i++) {
+                        tmp = JSON.parse(result[i])
+                        strs.push(tmp);
+                        tmp2 = {};
+                        tmp2['key'] = tmp['optionId'];
+                        tmp2['text'] = tmp['description'];
+                        tmp2['value'] = tmp['optionId'];
+                        ids.push(tmp2);
+                    }
+                    this.setState({
+                        listoption: strs,
+                        listoptionIds: ids
+                    });
+                }, (error) => {
+                    this.setState({
+                        isLoaded: false,
+                    });
+                }
+            )
+    }
+
+    getroomTypeOther() {
+        fetch("https://script.google.com/macros/s/AKfycby1NCjArXNvliviV9Su8imyfVXsNTUL2memG4bxJhX4JTcyoXGr/exec?func=PricebyOther")
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    let strs = [];
+                    let ids = [];
+                    let tmp = [];
+                    let tmp2 = {};
+                    for (let i = 0; i < result.length; i++) {
+                        tmp = JSON.parse(result[i])
+                        strs.push(tmp);
+                        tmp2 = {};
+                        tmp2['key'] = tmp['roomType'];
+                        tmp2['text'] = tmp['description'];
+                        tmp2['value'] = tmp['roomType'];
+                        ids.push(tmp2);
+                    }
+                    this.setState({
+                        roomTypeOther: strs,
+                        roomTypeOtherIds: ids
+                    });
+                }, (error) => {
+                    this.setState({
+                        isLoaded: false,
+                    });
+                }
+            )
+    }
+
     setListRoom() {
         let Name = "1";
         let Phone = "2";
@@ -139,11 +197,12 @@ export class IndexPage extends React.Component {
 
         return (
             <div>
-                <Input fluid icon='search' action='Search' placeholder='Search...'/>
+                <Input fluid icon='search plus' action='Search' placeholder='Search...'/>
                 <br/>
                 <Form.Group widths='equal'>
                     <Form.Select
                         fluid
+                        icon =''
                         label='RoomID'
                         onChange={this.handleChangeRoomIDSelect}
                         options={listRoomIds}
@@ -151,6 +210,7 @@ export class IndexPage extends React.Component {
                     />
                     <Form.Select
                         fluid
+                        icon=''
                         label='Status'
                         options={listStatusIds}
                         onChange={this.handleChangeStatusIDSelect}
@@ -163,7 +223,11 @@ export class IndexPage extends React.Component {
 
     renderListRooms() {
         return (
-            <ListRoomRows roomInfo={this.state.rooms}/>
+            <ListRoomRows roomsInfo={this.state.rooms}
+                          statusList={this.state.statusIds}
+                          roomTypeOther={this.state.roomTypeOtherIds}
+                          listoptionIds={this.state.listoptionIds}
+                          listoption={this.state.listoption} />
         );
     }
 
@@ -186,6 +250,8 @@ export class IndexPage extends React.Component {
     componentDidMount() {
         this.getListRoomDetails();
         this.getListStatus();
+        this.getroomTypeOther();
+        this.getlistoption();
     }
 
     render() {

@@ -4,6 +4,7 @@ import { Grid, Image, Rail, Segment } from 'semantic-ui-react';
 import { Button, Header, Icon, Modal } from 'semantic-ui-react';
 import { RoomDetail } from '../components/RoomDetail';
 import { RoomDetailModel } from '../components/RoomDetailModel';
+import 'semantic-ui-css/semantic.min.css';
 
 export class ListRoomRows extends React.Component {
     constructor(props) {
@@ -11,29 +12,36 @@ export class ListRoomRows extends React.Component {
         this.state = {
           open: false
         };
-        this.renderRow = this.renderRow.bind(this);
-        this.refreshPage = this.refreshPage.bind(this);
+
+        [
+            'renderRow',
+            'refreshPage'
+        ].forEach((method) => this[method] = this[method].bind(this));
     }
 
     refreshPage(){
 
     }
 
-    renderDetail(){
-        return <RoomDetail />;
+    renderDetail(room = []){
+        return <RoomDetail roominfo={room}
+                           statusList={this.props.statusList}
+                           roomTypeOther={this.props.roomTypeOther}
+                           listoptionIds={this.props.listoptionIds}
+                           listoption={this.props.listoption}/>;
     }
 
     renderRow() {
-        const {roomInfo} = this.props;
-        return Array.prototype.map.call(roomInfo, (room) => (
+        const {roomsInfo} = this.props;
+        return Array.prototype.map.call(roomsInfo, (room) => (
             <div className="col-3 col-12-mobile" key={room.roomid}>
                 <article className="item">
                     <div className="image fitfull">
-                        {this.renderDetail()}
+                        {this.renderDetail(room)}
                         {/*<a className="image fit"><img style={{boxShadow: '10px 10px 5px #ccc'}} src="images/hotelico.jpeg" alt="Hotel"/></a>*/}
                     </div>
                     <header>
-                        {room.status == 1 ? <h2 style={{backgroundColor: '#ffd633'}}>Room {room.roomid}</h2> : <h2 style={{backgroundColor: '#e1eaea'}}>Room {room.roomid}</h2>}
+                        {room.status == 1 ? <h2 style={{backgroundColor: '#e1eaea'}}>Room {room.roomid}</h2> : <h2 style={{backgroundColor: '#ffd633'}}>Room {room.roomid}</h2>}
                     </header>
                 </article>
             </div>
@@ -41,7 +49,7 @@ export class ListRoomRows extends React.Component {
     }
 
     render() {
-        console.log(this.props.roomInfo);
+        // console.log(this.props.roomInfo);
         return (
             <div className="row">
                 {this.renderRow()}
@@ -56,6 +64,10 @@ ListRoomRows.defaultProps = {
 }
 
 ListRoomRows.propTypes = {
-    roomsInfo: PropTypes.array
+    roomsInfo: PropTypes.array,
+    statusList: PropTypes.array,
+    roomTypeOther: PropTypes.array,
+    listoptionIds: PropTypes.array,
+    listoption: PropTypes.array
 }
 
