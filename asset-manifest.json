@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/hotel/static/css/main.34de6062.chunk.css",
-    "main.js": "/hotel/static/js/main.675282fb.chunk.js",
-    "main.js.map": "/hotel/static/js/main.675282fb.chunk.js.map",
+    "main.js": "/hotel/static/js/main.6f2a7f3b.chunk.js",
+    "main.js.map": "/hotel/static/js/main.6f2a7f3b.chunk.js.map",
     "runtime-main.js": "/hotel/static/js/runtime-main.e8220722.js",
     "runtime-main.js.map": "/hotel/static/js/runtime-main.e8220722.js.map",
     "static/css/2.37279102.chunk.css": "/hotel/static/css/2.37279102.chunk.css",
-    "static/js/2.62740762.chunk.js": "/hotel/static/js/2.62740762.chunk.js",
-    "static/js/2.62740762.chunk.js.map": "/hotel/static/js/2.62740762.chunk.js.map",
+    "static/js/2.1f92f506.chunk.js": "/hotel/static/js/2.1f92f506.chunk.js",
+    "static/js/2.1f92f506.chunk.js.map": "/hotel/static/js/2.1f92f506.chunk.js.map",
     "index.html": "/hotel/index.html",
-    "precache-manifest.c14ea8bf204c0dc18934ab94c2e758f8.js": "/hotel/precache-manifest.c14ea8bf204c0dc18934ab94c2e758f8.js",
+    "precache-manifest.d423422606319e0af0dbff4feb0feb35.js": "/hotel/precache-manifest.d423422606319e0af0dbff4feb0feb35.js",
     "service-worker.js": "/hotel/service-worker.js",
     "static/css/2.37279102.chunk.css.map": "/hotel/static/css/2.37279102.chunk.css.map",
     "static/css/main.34de6062.chunk.css.map": "/hotel/static/css/main.34de6062.chunk.css.map",
@@ -19,8 +19,8 @@
   "entrypoints": [
     "static/js/runtime-main.e8220722.js",
     "static/css/2.37279102.chunk.css",
-    "static/js/2.62740762.chunk.js",
+    "static/js/2.1f92f506.chunk.js",
     "static/css/main.34de6062.chunk.css",
-    "static/js/main.675282fb.chunk.js"
+    "static/js/main.6f2a7f3b.chunk.js"
   ]
 }
