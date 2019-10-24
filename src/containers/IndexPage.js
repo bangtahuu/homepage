@@ -109,15 +109,10 @@ export class IndexPage extends React.Component {
                     let strs = [];
                     let ids = [];
                     let tmp = [];
-                    let tmp2 = {};
                     for (let i = 0; i < result.length; i++) {
                         tmp = JSON.parse(result[i])
                         strs.push(tmp);
-                        tmp2 = {};
-                        tmp2['key'] = tmp['optionId'];
-                        tmp2['text'] = tmp['description'];
-                        tmp2['value'] = tmp['optionId'];
-                        ids.push(tmp2);
+                        ids.push(tmp['optionId']);
                     }
                     this.setState({
                         listoption: strs,

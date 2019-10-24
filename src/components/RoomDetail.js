@@ -66,7 +66,7 @@ export class RoomDetail extends React.Component {
             <Modal style={{width: '100%'}} closeIcon trigger={<a className="image fit"><img style={{boxShadow: '10px 10px 5px #ccc'}}
                                                                     src="images/hotelico.jpeg" alt="Hotel"/></a>}>
                 <Modal.Header>Room Detail</Modal.Header>
-                <Modal.Content image style={{height: '450%'}}>
+                <Modal.Content image scrolling style={{height: '450%'}}>
                     <Image size='medium' src={imgsrc} wrapped/>
 
                     <Modal.Description style={{width: '100%'}}>
