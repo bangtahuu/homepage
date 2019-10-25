@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button, Form, Header, Icon, Image, Modal} from 'semantic-ui-react'
+import {Button, Form, Header, Icon, Image, Label, Modal} from 'semantic-ui-react'
 import PropTypes from "prop-types";
 import Moment from 'moment'
 import momentLocalizer from 'react-widgets-moment';
@@ -71,9 +71,9 @@ export class RoomDetail extends React.Component {
 
                     <Modal.Description style={{width: '100%'}}>
                         <Header>{roominfo.roomDescription}</Header>
-                        <p>
+                        <b>
                             Status: {this.getStatusDes(roominfo.status)}
-                        </p>
+                        </b>
                         <hr/>
                         <label>
                             <b>Checkin:</b>
@@ -83,10 +83,13 @@ export class RoomDetail extends React.Component {
                         </div>
                         <hr/>
                         <div>
+                            <label>
+                                <b>Room Type:</b>
+                            </label>
                             <Form.Select
                                 fluid
                                 icon=''
-                                label='Room Type:'
+                                // label='Room Type:'
                                 value={this.state.roomCurrentClass}
                                 options={roomTypeOther}
                                 onChange={this.handleChangeTypeIDSelect}
@@ -94,16 +97,17 @@ export class RoomDetail extends React.Component {
                             />
                         </div>
                         <hr/>
-                        <p>Add Options:</p>
+                        <Label as='a' color='teal' ribbon>
+                            Thêm Sản Phẩm:
+                        </Label>
                         <ListOption listoptionIds={this.props.listoptionIds}
                                     listoption={this.props.listoption}
-                                    optionListSelected={this.state.optionListSelected}/>
+                                    optionListSelected={this.state.optionListSelected ? this.state.optionListSelected : []}/>
                     </Modal.Description>
                 </Modal.Content>
                 <Modal.Actions>
                     <Button primary onClick={this.redirectLink}>
-                        {/*<a href="http://localhost:3000/" style={{color: 'white'}}>Proceed</a>*/}
-                        Proceed
+                        Not Yet!
                     </Button>
                 </Modal.Actions>
             </Modal>
