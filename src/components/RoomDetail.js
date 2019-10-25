@@ -26,13 +26,13 @@ export class RoomDetail extends React.Component {
             'redirectLink',
             'getStatusDes',
             'onChangePickedTime',
-            'handleChangeTypeIDSelect'
+            'handleChangeTypeIDSelect',
+            'handleChangeOption',
         ].forEach((method) => this[method] = this[method].bind(this));
     }
 
     redirectLink() {
-        let link = window.location.href;
-        window.location.href = link;
+        window.location.reload(true)
     }
 
     getStatusDes(status = '') {
@@ -56,6 +56,10 @@ export class RoomDetail extends React.Component {
         this.setState({
             roomCurrentClass: val['value']
         });
+    }
+
+    handleChangeOption(data = []){
+        console.log(JSON.stringify(data))
     }
 
     render() {
@@ -102,6 +106,7 @@ export class RoomDetail extends React.Component {
                         </Label>
                         <ListOption listoptionIds={this.props.listoptionIds}
                                     listoption={this.props.listoption}
+                                    onChangeOption={this.handleChangeOption}
                                     optionListSelected={this.state.optionListSelected ? this.state.optionListSelected : []}/>
                     </Modal.Description>
                 </Modal.Content>

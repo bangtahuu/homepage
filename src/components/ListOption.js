@@ -29,11 +29,10 @@ export class ListOption extends React.Component {
             optionListSelected: [],
         };
         [
-            'handleAdd',
-            'handleRemove',
             'handleChangeDropdown',
-            'handleChangeQuantityOld',
-            'handleChangeQuantity'
+            'handleChangeQuantity',
+            'handleAddRow',
+            'handleRemoveRow',
         ].forEach((method) => this[method] = this[method].bind(this));
     }
 
@@ -74,59 +73,45 @@ export class ListOption extends React.Component {
 
     }
 
-    handleAdd = () => {
-        let optionListSelected = this.state.optionListSelected;
-        optionListSelected.push(this.state.option);
-        this.setState((prevState) => ({
-            items: this.props.listoptionIds.slice(0, prevState.items.length + 1),
-            optionListSelected: optionListSelected
-        }));
-    }
-
-    handleRemove = () =>
-        this.setState((prevState) => ({items: prevState.items.slice(0, -1)}))
-
-    handleChangeQuantityOld = (event, data, itempar) => {
-        console.log(event.target);
-        console.log(data);
-        console.log(itempar);
-
-        const optionListSelected = this.state.optionListSelected;
-        for (let i = 0; i < optionListSelected.length; i++) {
-            if (optionListSelected[i].option_id == itempar) {
-                optionListSelected[i].quantity = data.value;
-                break;
-            }
-        }
-
+    handleAddRow() {
+        const option = this.state.option;
+        const optionListSelected = this.state.optionListSelected
+        optionListSelected.push(option);
         this.setState({
             optionListSelected: optionListSelected
         });
+
+        this.props.onChangeOption(optionListSelected);
+    }
+
+    handleRemoveRow() {
+        const optionListSelected = this.state.optionListSelected
+        optionListSelected.pop();
+        this.setState({
+            optionListSelected: optionListSelected
+        });
+
+        this.props.onChangeOption(optionListSelected);
     }
 
     handleChangeQuantity(event, data) {
-        console.log(event);
-        console.log(data.value);
+        let option = this.state.option;
+        option['quantity'] = data.value;
+        option['total'] = data.value * option['price']
 
-        let listoption = this.props.listoption;
-        listoption['quantity'] =  data.value
         this.setState({
-            option: listoption,
+            option: option,
         });
     }
 
     handleChangeDropdown(event, data) {
-        console.log(event);
-        console.log(data.value);
-
         const listoption = this.props.listoption;
         for (let i = 0; i < listoption.length; i++) {
-            console.log(listoption[i]);
-            if(listoption[i].optionId == data.value){
+            if (listoption[i].optionId == data.value) {
                 let tmp = listoption[i];
                 tmp['option_id'] = listoption[i].optionId;
                 tmp['quantity'] = 1;
-                console.log(tmp);
+                tmp['total'] = tmp['price'];
                 this.setState({
                     option: tmp,
                 });
@@ -136,11 +121,10 @@ export class ListOption extends React.Component {
     }
 
     render() {
-        const {items} = this.state;
+        let items = this.state.optionListSelected;
         const {listoptionIds} = this.props;
         // console.log(this.props.listoptionIds);
-        console.log(this.props.listoption);
-        // console.log(this.state.items);
+        // console.log(this.props.listoption);
         // console.log(this.props.optionListSelected);
         // console.log(this.state.listoptionIds)
         // console.log(this.state.optionListSelected);
@@ -165,6 +149,7 @@ export class ListOption extends React.Component {
                                     <br/>
                                     <Label>Số lượng:</Label>
                                     <Input
+                                        disabled={this.state.option.option_id == 0 || this.state.option.option_id == null}
                                         placeholder='...'
                                         type='number'
                                         max='100'
@@ -182,26 +167,28 @@ export class ListOption extends React.Component {
                                 <Divider horizontal>Total</Divider>
 
                                 <Statistic horizontal size='tiny'>
-                                    <Statistic.Value>{formatNumber(1000000)}</Statistic.Value>
+                                    <Statistic.Value>{formatNumber(this.state.option.total)}</Statistic.Value>
                                     <Statistic.Label>vnd</Statistic.Label>
                                 </Statistic>
-                                <Button content='Add' icon='plus square' size='big' color='grey'/>
+                                <Button content='Add' icon='plus square' size='big' color='grey'
+                                        onClick={this.handleAddRow}
+                                        disabled={this.state.option.option_id == 0 || this.state.option.option_id == null || this.state.option.quantity == 0} />
                             </Grid.Column>
                         </Grid>
                     </Segment>
                 </div>
                 <Button.Group>
                 </Button.Group>
-                <TableBT size="sm" striped bordered hover style={{width: '100%'}}>
+                {items ? <TableBT size="sm" striped bordered hover style={{width: '100%'}}>
                     <thead>
                     <tr>
-                        <th>Chi tiết</th>
+                        <th></th>
                         <th>
                             <Button
                                 label='Remove'
                                 disabled={items.length === 0}
                                 icon='minus square'
-                                onClick={this.handleRemove}
+                                onClick={this.handleRemoveRow}
                                 floated='right'
                             />
                         </th>
@@ -209,22 +196,23 @@ export class ListOption extends React.Component {
                     </thead>
                     <tbody>
                     {items.map((item) => (
-                        <tr key={item}>
-                            {(this.state.optionListSelected && this.state.optionListSelected[count]) && (
-                                [<td key={item}>
-                                    <b>{this.state.optionListSelected[count].quantity} - {this.state.optionListSelected[count].description}</b>
+                        <tr key={Math.random()}>
+                            {(item) && (
+                                [<td key={Math.random()}>
+                                    <b>{item.quantity} - {item.description}</b>
                                 </td>,
-                                    <td key={item + 1}>
-                                        <b style={{float: 'right'}}><Label as='a' color='olive' tag
-                                                                           size='large'>{formatNumber(this.state.optionListSelected[count].total)} VND</Label></b>
-                                        <p hidden>{count = count + 1}</p>
-                                    </td>]
+                                <td key={Math.random()}>
+                                    <b style={{float: 'right'}}><Label as='a' color='olive' tag
+                                                                       size='large'>{formatNumber(item.total)} VND</Label></b>
+                                    <p hidden>{count = count + 1}</p>
+                                </td>]
                             )
-                            }
+                        }
                         </tr>
                     ))}
                     </tbody>
-                </TableBT>
+                </TableBT> : <div></div>
+                }
             </div>
         )
     }
@@ -234,4 +222,5 @@ ListOption.propTypes = {
     listoptionIds: PropTypes.array,
     listoption: PropTypes.array,
     optionListSelected: PropTypes.array,
+    onChangeOption: PropTypes.func,
 }
