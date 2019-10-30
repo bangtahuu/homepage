@@ -1,13 +1,11 @@
-import _ from 'lodash'
 import React from 'react'
-import {Button, Form, Image, Input, List, Transition, Dropdown, Dimmer} from 'semantic-ui-react'
-import {Icon} from 'semantic-ui-react'
+import {Button, Form, Input, Dropdown, Divider, Grid, Label, Statistic} from 'semantic-ui-react'
 import PropTypes from "prop-types";
-import {Table} from 'semantic-ui-react';
-import {Menu} from 'semantic-ui-react';
 import TableBT from 'react-bootstrap/Table';
-import {Loader, Segment} from 'semantic-ui-react';
-import {Divider, Header, Grid, Label, Statistic} from 'semantic-ui-react'
+import {Segment} from 'semantic-ui-react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import '../App.css';
 
 function formatNumber(num) {
     return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
@@ -15,18 +13,20 @@ function formatNumber(num) {
 
 export class ListOption extends React.Component {
     constructor(props) {
+        console.log('constructor');
         super(props);
         this.state = {
             items: this.props.listoptionIds.slice(0, this.props.optionListSelected.length),
             option: {
                 description: '',
-                option_id: null,
+                optionid: null,
                 price: 0,
                 quantity: 0,
                 total: 0
             },
             listoptionIds: [],
             optionListSelected: [],
+            totalOptions: 0,
         };
         [
             'handleChangeDropdown',
@@ -37,10 +37,11 @@ export class ListOption extends React.Component {
     }
 
     componentDidMount() {
+        console.log('componentDidMount');
         let listOptionSlt = this.props.optionListSelected;
         let listOptionSltIds = [];
         listOptionSlt && listOptionSlt.map(item => {
-            listOptionSltIds.push(item["option_id"])
+            listOptionSltIds.push(item["optionid"])
         })
 
         var listOptionIDsTmp = listOptionSltIds.concat(this.props.listoptionIds);
@@ -73,10 +74,23 @@ export class ListOption extends React.Component {
 
     }
 
+
     handleAddRow() {
-        const option = this.state.option;
-        const optionListSelected = this.state.optionListSelected
-        optionListSelected.push(option);
+        console.log('handleAddRow');
+        const option = {...this.state.option};
+        let optionListSelected = this.state.optionListSelected;
+        let flagNew = true;
+        for (let i = 0; i < optionListSelected.length; i++) {
+            if (optionListSelected[i].optionid == option.optionid) {
+                optionListSelected[i].quantity = parseInt(option.quantity) + parseInt(optionListSelected[i].quantity);
+                optionListSelected[i].total = (parseInt(option.quantity) + parseInt(optionListSelected[i].quantity)) * parseInt(optionListSelected[i].price);
+                flagNew = false;
+                break;
+            }
+        }
+        if (flagNew) {
+            optionListSelected.push(option);
+        }
         this.setState({
             optionListSelected: optionListSelected
         });
@@ -85,7 +99,8 @@ export class ListOption extends React.Component {
     }
 
     handleRemoveRow() {
-        const optionListSelected = this.state.optionListSelected
+        console.log('handleRemoveRow');
+        const optionListSelected = this.state.optionListSelected;
         optionListSelected.pop();
         this.setState({
             optionListSelected: optionListSelected
@@ -95,9 +110,21 @@ export class ListOption extends React.Component {
     }
 
     handleChangeQuantity(event, data) {
-        let option = this.state.option;
-        option['quantity'] = data.value;
-        option['total'] = data.value * option['price']
+        console.log('handleChangeQuantity');
+        if(!data){
+            return;
+        }
+        if (isNaN(data.value)) {
+            return
+        } else {
+            if (parseInt(data.value) < 0 || parseInt(data.value) > 100) {
+                toast.info('Số lượng phải từ 0 - 100');
+                return;
+            }
+        }
+        let option = {...this.state.option};
+        option['quantity'] = parseInt(data.value);
+        option['total'] = parseInt(data.value) * parseInt(option['price']);
 
         this.setState({
             option: option,
@@ -105,30 +132,36 @@ export class ListOption extends React.Component {
     }
 
     handleChangeDropdown(event, data) {
+        console.log('handleChangeDropdown');
         const listoption = this.props.listoption;
+        let tmp = [];
         for (let i = 0; i < listoption.length; i++) {
             if (listoption[i].optionId == data.value) {
-                let tmp = listoption[i];
-                tmp['option_id'] = listoption[i].optionId;
+                tmp = [];
+                tmp = listoption[i];
+                tmp['optionid'] = listoption[i].optionId;
                 tmp['quantity'] = 1;
                 tmp['total'] = tmp['price'];
-                this.setState({
-                    option: tmp,
-                });
                 break;
             }
         }
+        this.setState({
+            option: tmp,
+        });
     }
 
     render() {
-        let items = this.state.optionListSelected;
-        const {listoptionIds} = this.props;
+        console.log('render');
+        const items = this.state.optionListSelected;
+
+        // console.log(items);
         // console.log(this.props.listoptionIds);
         // console.log(this.props.listoption);
         // console.log(this.props.optionListSelected);
         // console.log(this.state.listoptionIds)
         // console.log(this.state.optionListSelected);
         // debugger;
+        var total_option = 0;
         var count = 0;
         return (
             <div>
@@ -140,7 +173,7 @@ export class ListOption extends React.Component {
                                     <Label>Loại SP:</Label>
                                     <Dropdown
                                         options={this.state.listoptionIds}
-                                        value={this.state.option.option_id}
+                                        value={this.state.option.optionid}
                                         placeholder='Choose an option'
                                         selection
                                         onChange={this.handleChangeDropdown}
@@ -149,7 +182,7 @@ export class ListOption extends React.Component {
                                     <br/>
                                     <Label>Số lượng:</Label>
                                     <Input
-                                        disabled={this.state.option.option_id == 0 || this.state.option.option_id == null}
+                                        disabled={this.state.option.optionid == 0 || this.state.option.optionid == null}
                                         placeholder='...'
                                         type='number'
                                         max='100'
@@ -162,6 +195,12 @@ export class ListOption extends React.Component {
                                     <Label> Số tiền/1
                                         sp: <b>{formatNumber(this.state.option.price)} VND</b>
                                     </Label>
+                                    <br/>
+                                    <br/>
+                                    {/*<Label style={{display: this.state.errMessQuantity}} basic color='red'*/}
+                                    {/*       pointing='left'>*/}
+                                    {/*    Số lượng từ phải từ 0 - 100*/}
+                                    {/*</Label>*/}
                                 </Form>
 
                                 <Divider horizontal>Total</Divider>
@@ -172,21 +211,21 @@ export class ListOption extends React.Component {
                                 </Statistic>
                                 <Button content='Add' icon='plus square' size='big' color='grey'
                                         onClick={this.handleAddRow}
-                                        disabled={this.state.option.option_id == 0 || this.state.option.option_id == null || this.state.option.quantity == 0} />
+                                        disabled={this.state.option.optionid == 0 || this.state.option.optionid == null || this.state.option.quantity == 0}/>
                             </Grid.Column>
                         </Grid>
                     </Segment>
                 </div>
                 <Button.Group>
                 </Button.Group>
-                {items ? <TableBT size="sm" striped bordered hover style={{width: '100%'}}>
+                {this.state.optionListSelected ? <TableBT size="sm" striped bordered hover style={{width: '100%'}}>
                     <thead>
                     <tr>
                         <th></th>
                         <th>
                             <Button
                                 label='Remove'
-                                disabled={items.length === 0}
+                                disabled={this.state.optionListSelected.length === 0}
                                 icon='minus square'
                                 onClick={this.handleRemoveRow}
                                 floated='right'
@@ -195,22 +234,31 @@ export class ListOption extends React.Component {
                     </tr>
                     </thead>
                     <tbody>
-                    {items.map((item) => (
+                    {this.state.optionListSelected.map((item) => (
                         <tr key={Math.random()}>
                             {(item) && (
                                 [<td key={Math.random()}>
                                     <b>{item.quantity} - {item.description}</b>
                                 </td>,
-                                <td key={Math.random()}>
-                                    <b style={{float: 'right'}}><Label as='a' color='olive' tag
-                                                                       size='large'>{formatNumber(item.total)} VND</Label></b>
-                                    <p hidden>{count = count + 1}</p>
-                                </td>]
+                                    <td key={Math.random()}>
+                                        <b style={{float: 'right'}}><Label as='a' color='olive' tag
+                                                                           size='large'>{formatNumber(item.total)} VND</Label></b>
+                                        <p hidden>{count = count + 1} {total_option = total_option + item.total}</p>
+                                    </td>]
                             )
-                        }
+                            }
                         </tr>
                     ))}
                     </tbody>
+                    <tfoot>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <b style={{float: 'right'}}><Label as='a' color='yellow' tag
+                                                               size='large'>{formatNumber(total_option)} VND</Label></b>
+                        </td>
+                    </tr>
+                    </tfoot>
                 </TableBT> : <div></div>
                 }
             </div>

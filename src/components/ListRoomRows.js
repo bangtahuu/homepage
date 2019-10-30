@@ -1,9 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Image, Rail, Segment } from 'semantic-ui-react';
-import { Button, Header, Icon, Modal } from 'semantic-ui-react';
 import { RoomDetail } from '../components/RoomDetail';
-import { RoomDetailModel } from '../components/RoomDetailModel';
 import 'semantic-ui-css/semantic.min.css';
 
 export class ListRoomRows extends React.Component {
@@ -28,7 +25,8 @@ export class ListRoomRows extends React.Component {
                            statusList={this.props.statusList}
                            roomTypeOther={this.props.roomTypeOther}
                            listoptionIds={this.props.listoptionIds}
-                           listoption={this.props.listoption}/>;
+                           listoption={this.props.listoption}
+                           UpdateCheckInRoom={this.props.UpdateCheckInRoom}/>;
     }
 
     renderRow() {
@@ -68,6 +66,7 @@ ListRoomRows.propTypes = {
     statusList: PropTypes.array,
     roomTypeOther: PropTypes.array,
     listoptionIds: PropTypes.array,
-    listoption: PropTypes.array
+    listoption: PropTypes.array,
+    UpdateCheckInRoom: PropTypes.func,
 }
 

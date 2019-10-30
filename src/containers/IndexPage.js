@@ -1,19 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Form} from 'semantic-ui-react';
-import {Button, Card, Image} from 'semantic-ui-react';
-import {Input} from 'semantic-ui-react';
-import {Loader, Segment} from 'semantic-ui-react';
+import {Form, Input, Image, Loader, Segment, Dimmer, Label} from 'semantic-ui-react';
 import {ListRoomRows} from '../components/ListRoomRows';
-import { Dimmer } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
-
+import {toast, ToastContainer} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import '../App.css';
 
 export class IndexPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoaded: false,
+            isLoadedRooms: false,
+            isLoadedParam: false,
             rooms: [],
             roomIds: [],
             status: [],
@@ -28,20 +27,25 @@ export class IndexPage extends React.Component {
 
         [
             'getListRoomDetails',
-            'setListRoom',
+            'UpdateCheckInRoom',
             'handleChangeRoomIDSelect',
             'handleChangeStatusIDSelect',
             'getListStatus',
             'renderSearchForm',
             'renderListRooms',
             'getroomTypeOther',
-            'getlistoption'
+            'getlistoption',
+            'handleClearSearching',
         ].forEach((method) => this[method] = this[method].bind(this));
     }
 
-
-    getListRoomDetails() {
-        fetch("https://script.google.com/macros/s/AKfycby1NCjArXNvliviV9Su8imyfVXsNTUL2memG4bxJhX4JTcyoXGr/exec?func=listRoomsDetail")
+    async getListRoomDetails(filter) {
+        console.log("getListRoomDetails");
+        console.log(filter);
+        this.setState({
+            isLoadedRooms: false,
+        });
+        await fetch("https://script.google.com/macros/s/AKfycby1NCjArXNvliviV9Su8imyfVXsNTUL2memG4bxJhX4JTcyoXGr/exec?func=listRoomsDetail")
             .then(res => res.json())
             .then(
                 (result) => {
@@ -58,14 +62,26 @@ export class IndexPage extends React.Component {
                         tmp2['value'] = tmp['roomid'];
                         ids.push(tmp2);
                     }
-                    this.setState({
-                        isLoaded: true,
-                        rooms: strs,
-                        roomIds: ids
-                    });
+                    // debugger;
+                    if (filter) {
+                        let newstr = strs.filter(function (item) {
+                            return item.roomid == filter.id;
+                        });
+                        this.setState({
+                            isLoadedRooms: true,
+                            rooms: newstr,
+                            roomIds: ids
+                        });
+                    } else {
+                        this.setState({
+                            isLoadedRooms: true,
+                            rooms: strs,
+                            roomIds: ids
+                        });
+                    }
                 }, (error) => {
                     this.setState({
-                        isLoaded: false,
+                        isLoadedRooms: false,
                     });
                 }
             )
@@ -90,12 +106,13 @@ export class IndexPage extends React.Component {
                         ids.push(tmp2);
                     }
                     this.setState({
+                        isLoadedParam: true,
                         status: strs,
                         statusIds: ids
                     });
                 }, (error) => {
                     this.setState({
-                        isLoaded: false,
+                        isLoadedParam: false,
                     });
                 }
             )
@@ -115,12 +132,13 @@ export class IndexPage extends React.Component {
                         ids.push(tmp['optionId']);
                     }
                     this.setState({
+                        isLoadedParam: true,
                         listoption: strs,
                         listoptionIds: ids
                     });
                 }, (error) => {
                     this.setState({
-                        isLoaded: false,
+                        isLoadedParam: false,
                     });
                 }
             )
@@ -145,85 +163,62 @@ export class IndexPage extends React.Component {
                         ids.push(tmp2);
                     }
                     this.setState({
+                        isLoadedParam: true,
                         roomTypeOther: strs,
                         roomTypeOtherIds: ids
                     });
                 }, (error) => {
                     this.setState({
-                        isLoaded: false,
+                        isLoadedParam: false,
                     });
                 }
             )
     }
 
-    setListRoom() {
-        let Name = "1";
-        let Phone = "2";
-        let Company = "3";
-        let Company_Address = "4";
-        let isICMCenter = "5";
-        let RangeIncome = "6";
-        let Product = "7";
-        let encoded = "Name=" + Name + "&Phone=" + Phone + "&Company=" + Company + "&Company_Address=" + Company_Address + "&isICMCenter=" + isICMCenter + "&RangeIncome=" + RangeIncome + "&Product=" + Product;
+    async UpdateCheckInRoom(id, checkinTime, roomClass, options, totalOptionPrice) {
+        let current_datetime = checkinTime;
+        let formatted_date = current_datetime.getFullYear() + "-" + (current_datetime.getMonth() + 1) + "-" + current_datetime.getDate() + " " + current_datetime.getHours() + ":" + current_datetime.getMinutes() + ":" + current_datetime.getSeconds()
+        // debugger;
+        let encoded = "checkinTime=" + formatted_date +
+            "&roomClass=" + roomClass +
+            "&options=" + options +
+            "&totalOptionPrice=" + totalOptionPrice;
 
-        fetch('https://script.google.com/macros/s/AKfycby1NCjArXNvliviV9Su8imyfVXsNTUL2memG4bxJhX4JTcyoXGr/exec', {
+        await fetch('https://script.google.com/macros/s/AKfycby1NCjArXNvliviV9Su8imyfVXsNTUL2memG4bxJhX4JTcyoXGr/exec?func=checkin&id=' + id, {
             method: 'POST',
             body: encoded,
-            // body: JSON.stringify({
-            //     title: 'New title added',
-            //     body: 'New body added. Hello body.'
-            // }),
             headers: {
                 "Content-type": "application/x-www-form-urlencoded"
             }
-        }).then(response => {
-            console.log(response.json());
-        }).then(json => {
-            console.log(json);
-            // this.setState({
-            //     user:json
-            // });
+        }).then(async function (response) {
+            let msgerr = '';
+            let isSuccess = false;
+            await response.json().then(function (data) {
+                console.log(data);
+                data['result'] == 'error' ? msgerr = JSON.stringify(data["error"]["message"]) : isSuccess = true;
+            });
+
+            let stt = response.status;
+            if (stt == 200) {
+                if (!msgerr) {
+                    toast.success("Đặt phòng thành công!", {
+                        position: toast.POSITION.TOP_RIGHT
+                    });
+                } else {
+                    toast.error("Error:" + JSON.stringify(msgerr));
+                }
+            } else {
+                toast.error("Something is wrong, please check log for detail!");
+            }
+        })
+    }
+
+    handleClearSearching() {
+        this.setState({
+            roomidselected: '',
+            statusSelected: '',
         });
-    }
-
-    renderSearchForm() {
-        let listRoomIds = this.state.roomIds;
-        let listStatusIds = this.state.statusIds;
-
-        return (
-            <div>
-                <Input fluid icon='search plus' action='Search' placeholder='Search...'/>
-                <br/>
-                <Form.Group widths='equal'>
-                    <Form.Select
-                        fluid
-                        icon =''
-                        label='RoomID'
-                        onChange={this.handleChangeRoomIDSelect}
-                        options={listRoomIds}
-                        placeholder='RoomIDs'
-                    />
-                    <Form.Select
-                        fluid
-                        icon=''
-                        label='Status'
-                        options={listStatusIds}
-                        onChange={this.handleChangeStatusIDSelect}
-                        placeholder='Status'
-                    />
-                </Form.Group>
-            </div>
-        );
-    }
-
-    renderListRooms() {
-        return (
-            <ListRoomRows roomsInfo={this.state.rooms}
-                          statusList={this.state.statusIds}
-                          roomTypeOther={this.state.roomTypeOtherIds}
-                          listoptionIds={this.state.listoptionIds}
-                          listoption={this.state.listoption} />
-        );
+        this.getListRoomDetails();
     }
 
     handleChangeRoomIDSelect(event, val = null) {
@@ -231,7 +226,11 @@ export class IndexPage extends React.Component {
             return;
         this.setState({
             roomidselected: val['value']
+        }, () => {
+            let filter = {'id': val['value']};
+            this.getListRoomDetails(filter);
         });
+        // getListRoomDetails
     }
 
     handleChangeStatusIDSelect(event, val = null) {
@@ -242,6 +241,78 @@ export class IndexPage extends React.Component {
         });
     }
 
+    renderSearchForm() {
+        let listRoomIds = this.state.roomIds;
+        let listStatusIds = this.state.statusIds;
+
+        if (this.state.isLoadedParam == false) {
+            return (<Segment>
+                <Dimmer active inverted>
+                    <Loader size='large'>Loading</Loader>
+                </Dimmer>
+                <Image src='images/loader.png'/>
+            </Segment>);
+        }
+
+        let styleDisable = {'pointerEvents': ''};
+
+        if (!this.state.isLoadedRooms || !this.state.isLoadedParam) {
+            styleDisable = {'pointerEvents': 'none'};
+        }
+        return (
+            <Segment padded style={styleDisable}>
+                <Label attached='top left' onClick={this.handleClearSearching}>Clear</Label>
+                <Input fluid icon='search plus' action='Search' placeholder='Search...'/>
+                <br/>
+                <Form.Group widths='equal'>
+                    <Form.Select
+                        fluid
+                        icon=''
+                        label='RoomID'
+                        value={this.state.roomidselected}
+                        onChange={this.handleChangeRoomIDSelect}
+                        options={listRoomIds}
+                        placeholder='RoomIDs'
+                    />
+                    <Form.Select
+                        fluid
+                        icon=''
+                        label='Status'
+                        value={this.state.statusSelected}
+                        options={listStatusIds}
+                        onChange={this.handleChangeStatusIDSelect}
+                        placeholder='Status'
+                    />
+                </Form.Group>
+            </Segment>
+        );
+    }
+
+    renderListRooms() {
+        const {rooms, statusIds, roomTypeOtherIds, listoptionIds, listoption} = {...this.state};
+
+        if (this.state.isLoadedRooms == false) {
+            return (<Segment>
+                <Dimmer active inverted>
+                    <Loader size='large'>Loading</Loader>
+                </Dimmer>
+                <Image src='images/loader.png'/>
+            </Segment>);
+        }
+
+        return (
+            <Segment padded>
+                <Label attached='top'>Room List</Label>
+                <ListRoomRows roomsInfo={rooms}
+                              statusList={statusIds}
+                              roomTypeOther={roomTypeOtherIds}
+                              listoptionIds={listoptionIds}
+                              listoption={listoption}
+                              UpdateCheckInRoom={this.UpdateCheckInRoom}/>
+            </Segment>
+        );
+    }
+
     componentDidMount() {
         this.getListRoomDetails();
         this.getListStatus();
@@ -250,18 +321,11 @@ export class IndexPage extends React.Component {
     }
 
     render() {
-        if (this.state.isLoaded == false) {
-            return (<Segment>
-                        <Dimmer active inverted>
-                            <Loader size='large'>Loading</Loader>
-                        </Dimmer>
-                        <Image src='images/loader.png'/>
-                    </Segment>);
-        }
         // console.log(this.state.statusIds);
         // console.log(this.state.statusSelected);
         return (
             <div>
+                <ToastContainer style={{fontSize: '20px', textAlign: 'center'}}/>
                 <Form>
                     {this.renderSearchForm()}
                     {this.renderListRooms()}
