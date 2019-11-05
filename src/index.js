@@ -73,7 +73,6 @@ class ThaiBinhHotel extends React.Component {
                     this.checkTokenValid(result["ip"])
                 }, (error) => {
                     console.log(error);
-                    return "";
                 }
             )
     }
