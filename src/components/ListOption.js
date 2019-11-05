@@ -33,6 +33,7 @@ export class ListOption extends React.Component {
             'handleChangeQuantity',
             'handleAddRow',
             'handleRemoveRow',
+            'handleOptionOtherChange'
         ].forEach((method) => this[method] = this[method].bind(this));
     }
 
@@ -82,12 +83,18 @@ export class ListOption extends React.Component {
         let flagNew = true;
         for (let i = 0; i < optionListSelected.length; i++) {
             if (optionListSelected[i].optionid == option.optionid) {
-                optionListSelected[i].quantity = parseInt(option.quantity) + parseInt(optionListSelected[i].quantity);
-                optionListSelected[i].total = (parseInt(option.quantity) + parseInt(optionListSelected[i].quantity)) * parseInt(optionListSelected[i].price);
+                if(optionListSelected[i].description.startsWith("Other")){
+                    optionListSelected[i].quantity = 1;
+                    optionListSelected[i].total = option.total;
+                } else {
+                    optionListSelected[i].quantity = parseInt(option.quantity) + parseInt(optionListSelected[i].quantity);
+                    optionListSelected[i].total = parseInt(optionListSelected[i].quantity) * parseInt(optionListSelected[i].price);
+                }
                 flagNew = false;
                 break;
             }
         }
+        console.log(optionListSelected);
         if (flagNew) {
             optionListSelected.push(option);
         }
@@ -150,6 +157,15 @@ export class ListOption extends React.Component {
         });
     }
 
+    handleOptionOtherChange(val, data){
+        let tmp = {...this.state.option};
+        tmp['total'] = (parseInt(data.value) ? parseInt(data.value) : 0);
+        console.log(tmp);
+        this.setState({
+           option: tmp
+        });
+    }
+
     render() {
         console.log('render');
         const items = this.state.optionListSelected;
@@ -182,7 +198,7 @@ export class ListOption extends React.Component {
                                     <br/>
                                     <Label>Số lượng:</Label>
                                     <Input
-                                        disabled={this.state.option.optionid == 0 || this.state.option.optionid == null}
+                                        disabled={this.state.option.optionid == 0 || this.state.option.optionid == null || this.state.option.description.startsWith("Other")}
                                         placeholder='...'
                                         type='number'
                                         max='100'
@@ -205,13 +221,20 @@ export class ListOption extends React.Component {
 
                                 <Divider horizontal>Total</Divider>
 
-                                <Statistic horizontal size='tiny'>
-                                    <Statistic.Value>{formatNumber(this.state.option.total)}</Statistic.Value>
-                                    <Statistic.Label>vnd</Statistic.Label>
-                                </Statistic>
+                                {this.state.option.description.startsWith("Other")
+                                    ? <div>
+                                        <Input size="small" type="number" value={this.state.option.total} onChange={this.handleOptionOtherChange}/>
+                                        <br/><br/>
+                                     </div>
+                                    : <Statistic horizontal size='tiny'>
+                                        <Statistic.Value>{formatNumber(this.state.option.total)}</Statistic.Value>
+                                        <Statistic.Label>vnd</Statistic.Label>
+                                     </Statistic>
+                                }
+
                                 <Button content='Add' icon='plus square' size='big' color='grey'
                                         onClick={this.handleAddRow}
-                                        disabled={this.state.option.optionid == 0 || this.state.option.optionid == null || this.state.option.quantity == 0}/>
+                                        disabled={this.state.option.optionid == 0 || this.state.option.optionid == null || this.state.option.quantity == 0 || this.state.option.total == 0}/>
                             </Grid.Column>
                         </Grid>
                     </Segment>

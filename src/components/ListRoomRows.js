@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { RoomDetail } from '../components/RoomDetail';
+import { RoomDetailCheckin } from '../components/RoomDetailCheckin';
+import { RoomDetailCheckout } from '../components/RoomDetailCheckout';
 import 'semantic-ui-css/semantic.min.css';
 
 export class ListRoomRows extends React.Component {
@@ -21,12 +22,27 @@ export class ListRoomRows extends React.Component {
     }
 
     renderDetail(room = []){
-        return <RoomDetail roominfo={room}
-                           statusList={this.props.statusList}
-                           roomTypeOther={this.props.roomTypeOther}
-                           listoptionIds={this.props.listoptionIds}
-                           listoption={this.props.listoption}
-                           UpdateCheckInRoom={this.props.UpdateCheckInRoom}/>;
+        if(room.status == 1) {
+            return <RoomDetailCheckin roominfo={room}
+                                      statusList={this.props.statusList}
+                                      roomTypeOther={this.props.roomTypeOther}
+                                      listoptionIds={this.props.listoptionIds}
+                                      listoption={this.props.listoption}
+                                      UpdateCheckInRoom={this.props.UpdateCheckInRoom}
+                                      CheckoutSubmitRoom={this.props.CheckoutRoom}/>;
+        }
+        if(room.status == 0) {
+            return <RoomDetailCheckin roominfo={room}
+                                      statusList={this.props.statusList}
+                                      roomTypeOther={this.props.roomTypeOther}
+                                      listoptionIds={this.props.listoptionIds}
+                                      listoption={this.props.listoption}
+                                      UpdateCheckInRoom={this.props.UpdateCheckInRoom}
+                                      CheckoutSubmitRoom={this.props.CheckoutRoom}/>;
+        }
+        if(room.status == 2) {
+
+        }
     }
 
     renderRow() {
@@ -36,10 +52,9 @@ export class ListRoomRows extends React.Component {
                 <article className="item">
                     <div className="image fitfull">
                         {this.renderDetail(room)}
-                        {/*<a className="image fit"><img style={{boxShadow: '10px 10px 5px #ccc'}} src="images/hotelico.jpeg" alt="Hotel"/></a>*/}
                     </div>
                     <header>
-                        {room.status == 1 ? <h2 style={{backgroundColor: '#e1eaea'}}>Room {room.roomid}</h2> : <h2 style={{backgroundColor: '#ffd633'}}>Room {room.roomid}</h2>}
+                        {room.status == 1 ? <h2 style={{backgroundColor: '#e1eaea'}}>{room.roomid}</h2> : <h2 style={{backgroundColor: '#ffd633'}}>{room.roomid}</h2>}
                     </header>
                 </article>
             </div>
@@ -68,5 +83,6 @@ ListRoomRows.propTypes = {
     listoptionIds: PropTypes.array,
     listoption: PropTypes.array,
     UpdateCheckInRoom: PropTypes.func,
+    CheckoutRoom: PropTypes.func
 }
 
