@@ -63,6 +63,13 @@ class ThaiBinhHotel extends React.Component {
                         userInfo: userInfo
                     });
 
+                    if (!this.state.userInfo.token) {
+                        this.setState({
+                            isChecking: false
+                        });
+                        return;
+                    }
+
                     this.checkTokenValid(result["ip"])
                 }, (error) => {
                     console.log(error);
@@ -117,7 +124,6 @@ class ThaiBinhHotel extends React.Component {
                 isTokenValid: false,
                 isChecking: false
             });
-            return;
         }
         this.getIPAndCheckToken();
     }
