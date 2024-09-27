@@ -46,35 +46,61 @@ class ThaiBinhHotel extends React.Component {
         this.setState({
             isChecking: true,
         });
-        fetch("https://api.ipify.org/?format=json", {
-            method: "GET",
-            // body: JSON.stringify(data),
-            headers: {
-                "Content-Type": "application/json"
-            },
-        }).then(res => res.json())
-            .then(
-                (result) => {
-                    console.log(result["ip"]);
 
-                    let userInfo = {...this.state.userInfo};
-                    userInfo['ipAddress'] = result["ip"]
-                    this.setState({
-                        userInfo: userInfo
-                    });
+        if (window.location.host == "localhost:3000") {
+            let result = JSON.parse("{\"ip\":\"1.54.77.215\"}");
+            console.log(result["ip"]);
 
-                    if (!this.state.userInfo.token) {
+            let userInfo = {...this.state.userInfo};
+            userInfo['ipAddress'] = result["ip"]
+            this.setState({
+                userInfo: userInfo
+            });
+
+            if (!this.state.userInfo.token) {
+                this.setState({
+                    isChecking: false
+                });
+                return;
+            }
+
+            this.checkTokenValid(result["ip"])
+        } else {
+            // if(window.location.href == "http://localhost:3000/")
+            fetch("https://api.ipify.org/?format=json", {
+                method: "GET",
+                mode: 'cors',
+                // body: JSON.stringify(data),
+                headers: {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS');",
+                    "Access-Control-Allow-Headers": "Content-Type"
+                },
+            }).then(res => res.json())
+                .then(
+                    (result) => {
+                        console.log(result["ip"]);
+
+                        let userInfo = {...this.state.userInfo};
+                        userInfo['ipAddress'] = result["ip"]
                         this.setState({
-                            isChecking: false
+                            userInfo: userInfo
                         });
-                        return;
-                    }
 
-                    this.checkTokenValid(result["ip"])
-                }, (error) => {
-                    console.log(error);
-                }
-            )
+                        if (!this.state.userInfo.token) {
+                            this.setState({
+                                isChecking: false
+                            });
+                            return;
+                        }
+
+                        this.checkTokenValid(result["ip"])
+                    }, (error) => {
+                        console.log(error);
+                    }
+                )
+        }
     }
 
     async checkTokenValid(ipAddress) {
@@ -88,7 +114,7 @@ class ThaiBinhHotel extends React.Component {
         console.log(encoded);
 
         let isValid = false;
-        fetch('https://script.google.com/macros/s/AKfycby1NCjArXNvliviV9Su8imyfVXsNTUL2memG4bxJhX4JTcyoXGr/exec?func=checkToken', {
+        fetch('https://script.google.com/macros/s/AKfycbyYHV6fvlROAM9_EeLkFT12n4SCXxWMLmeOuiVEwwOu65a9TMDGLl5hp6AeasnsYsbG/exec?func=checkToken', {
             method: 'POST',
             body: encoded,
             headers: {
@@ -125,6 +151,7 @@ class ThaiBinhHotel extends React.Component {
             });
         }
         this.getIPAndCheckToken();
+        // this.checkTokenValid("1.54.77.215");
     }
 
     render() {
