@@ -1,21 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {ListRoomRows} from "../components/ListRoomRows";
 import {
     Button,
     Form,
-    Header,
-    Image,
-    Input,
-    Label,
-    Modal,
     Segment,
-    Statistic,
-    TextArea,
-    Confirm, Loader, Dimmer
 } from 'semantic-ui-react';
 import {encrypt} from '../components/sha256';
 import {toast} from 'react-toastify';
+import cookie from 'react-cookies';
 
 export class LoginPage extends React.Component {
     constructor(props) {
@@ -33,7 +25,8 @@ export class LoginPage extends React.Component {
             userInfo: {
                 token: '',
                 email: '',
-                ipAddress: ''
+                ipAddress: '',
+                deviceName: '',
             },
             userName: '',
             passWord: '',
@@ -69,7 +62,7 @@ export class LoginPage extends React.Component {
     }
 
     componentDidMount() {
-        console.log(this.props.ipAddress);
+
     }
 
     verifyEmail() {
@@ -79,21 +72,22 @@ export class LoginPage extends React.Component {
         let username = this.state.userName;
 
         let encoded = "email=" + username +
+            "&deviceName=" + this.props.deviceName +
             "&ipAddress=" + this.props.ipAddress;
 
-        console.log(encoded);
+
         let isValid = false;
-        fetch('https://script.google.com/macros/s/AKfycbyYHV6fvlROAM9_EeLkFT12n4SCXxWMLmeOuiVEwwOu65a9TMDGLl5hp6AeasnsYsbG/exec?func=verifyemail', {
+        fetch('https://script.google.com/macros/s/AKfycbxb7Uowm3MLV6UcbBK1rZ73wy8SXq44F-ZJhFChgkZJEXM5EpSO_MUckOvrxZf9MAch/exec?func=verifyemail', {
             method: 'POST',
             body: encoded,
             headers: {"Content-type": "application/x-www-form-urlencoded"}
         }).then(async function (response) {
             let msgerr = '';
             await response.json().then(function (data) {
-                console.log(data);
+
                 data['result'] == 'error' ? msgerr = JSON.stringify(data["error"]) : isValid = true;
                 if (!msgerr) {
-                    toast.success("Please check your email to get PIN code!", {position: toast.POSITION.TOP_RIGHT});
+                    toast.success("Kiểm tra email để lấy mã PIN.", {position: toast.POSITION.TOP_RIGHT});
                 } else {
                     toast.error(msgerr);
                 }
@@ -114,7 +108,7 @@ export class LoginPage extends React.Component {
         this.setState({
             isChecking: true
         });
-        console.log(this.state.passWord)
+
         let passWordHash = encrypt(this.state.passWord);
         let username = this.state.userName;
         let pincode = this.state.pinCode;
@@ -122,12 +116,13 @@ export class LoginPage extends React.Component {
         let encoded = "email=" + username +
             "&pass=" + passWordHash +
             "&pincode=" + pincode +
+            "&deviceName=" + this.props.deviceName +
             "&ipAddress=" + this.props.ipAddress;
 
-        console.log(encoded);
+
         let isValid = false;
         let token = "";
-        fetch('https://script.google.com/macros/s/AKfycbyYHV6fvlROAM9_EeLkFT12n4SCXxWMLmeOuiVEwwOu65a9TMDGLl5hp6AeasnsYsbG/exec?func=login', {
+        fetch('https://script.google.com/macros/s/AKfycbxb7Uowm3MLV6UcbBK1rZ73wy8SXq44F-ZJhFChgkZJEXM5EpSO_MUckOvrxZf9MAch/exec?func=login', {
             method: 'POST',
             body: encoded,
             headers: {
@@ -137,13 +132,17 @@ export class LoginPage extends React.Component {
             let msgerr = '';
             // debugger;
             await response.json().then(function (data) {
-                console.log(data);
+
                 data['result'] == 'error' ? msgerr = JSON.stringify(data["error"]) : isValid = true;
                 if (!msgerr) {
                     token = data['token'];
-                    sessionStorage.setItem('tokenTBh', data['token']);
-                    sessionStorage.setItem('emailTBh', username);
-                    toast.success("Login Successfully!", {position: toast.POSITION.TOP_RIGHT});
+                    cookie.remove('tokenTBh', { path: "/homepage" });
+                    cookie.remove('emailTBh', { path: "/homepage" });
+                    cookie.remove('userNameTBh', { path: "/homepage" });
+                    cookie.save('tokenTBh', data['token'], {path: "/homepage", maxAge: 1296000});
+                    cookie.save('userNameTBh', ("Hello " + data['username']), {path: "/homepage", maxAge: 1296000});
+                    cookie.save('emailTBh', username, {path: "/homepage", maxAge: 1296000});
+                    toast.success("Đăng nhập thành công!", {position: toast.POSITION.TOP_RIGHT});
                 } else {
                     toast.error(msgerr);
                 }
@@ -167,9 +166,9 @@ export class LoginPage extends React.Component {
                         fluid
                         onChange={this.handleChangeUser}
                         value={this.state.userName}
-                        label='User_Name:'
+                        label='Email:'
                         name="username"
-                        placeholder='Your Email'
+                        placeholder='Email@'
                     />
                     {this.state.isVerified && <Form.Input
                         style={{display: this.state.isVerified ? '' : 'none'}}
@@ -179,7 +178,7 @@ export class LoginPage extends React.Component {
                         value={this.state.passWord}
                         type="password"
                         label='Password:'
-                        placeholder='Put Your Password here...'
+                        placeholder='Nhập mật khẩu...'
                     />}
 
                     {this.state.isVerified && <Form.Input
@@ -188,18 +187,18 @@ export class LoginPage extends React.Component {
                         onChange={this.handleChangePinCode}
                         value={this.state.pinCode}
                         type="number"
-                        label='Pin Code:'
-                        placeholder='Put your Pin code here...'
+                        label='Mã Pin:'
+                        placeholder='Kiểm tra email để lấy mã Pin...'
                     />}
                     {this.state.isVerified ?
                         <Button fluid size="large" onClick={this.submitLogin} disabled={this.state.isChecking} primary
                                 type='submit'>
-                            Submit
+                            Đăng nhập
                         </Button>
                         :
                         <Button fluid size="large" onClick={this.verifyEmail} disabled={this.state.isChecking} primary
                                 type='submit'>
-                            Verify
+                            Kiểm tra
                         </Button>
                     }
                 </Form>
@@ -210,6 +209,7 @@ export class LoginPage extends React.Component {
 
 LoginPage.propTypes = {
     ipAddress: PropTypes.string,
+    deviceName: PropTypes.string,
     setTokenValid: PropTypes.func
 }
 

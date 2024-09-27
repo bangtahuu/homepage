@@ -18,12 +18,11 @@ import momentLocalizer from 'react-widgets-moment';
 import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 import 'react-widgets/dist/css/react-widgets.css';
 import {ListOption} from '../components/ListOption';
-import {ConfirmFinalMessage} from '../components/ConfirmFinalMessage';
 import 'semantic-ui-css/semantic.min.css';
 import {toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../App.css';
-import {ListRoomRows} from "./ListRoomRows";
+import cookie from 'react-cookies';
 
 Moment.locale('vn')
 momentLocalizer()
@@ -102,7 +101,6 @@ export class RoomDetailCheckin extends React.Component {
     }
 
     show = () => this.setState({open: true})
-    handleConfirm = () => this.setState({open: false})
     handleCancel = () => this.setState({open: false})
 
     checkoutRoomSubmit() {
@@ -155,6 +153,14 @@ export class RoomDetailCheckin extends React.Component {
             return;
         }
 
+        if(!this.state.checkoutInfo.totalRoomPrice || this.state.checkoutInfo.totalRoomPrice == 0){
+            toast.error('Bạn phải tính giá phòng trước khi kết thúc!');
+            this.setState({
+                isSubmiting: false
+            });
+            return;
+        }
+
         this.props.CheckoutSubmitRoom(id, checkinTime, roomClass, options, totalOptionPrice, roomId, action, checkoutTime, totalRoomPrice, totalPrice, noteText);
     }
 
@@ -162,7 +168,6 @@ export class RoomDetailCheckin extends React.Component {
         this.setState({
             isSubmiting: true
         });
-        let action = 'checkin';
         let roomId = this.props.roominfo.roomid;
         let id = this.props.roominfo.id;
         let noteText = this.state.noteText;
@@ -170,7 +175,6 @@ export class RoomDetailCheckin extends React.Component {
         let checkinTime = '';
         if (isMobile.iOS()) {
             checkinTime = this.state.CheckinDate + " " + this.state.CheckinTime;
-            console.log(checkinTime)
         } else {
             checkinTime = this.state.CheckinTimeSelected;
         }
@@ -369,17 +373,15 @@ export class RoomDetailCheckin extends React.Component {
             formattedcheckout_date = current_Checkoutdatetime.getFullYear() + "-" + (current_Checkoutdatetime.getMonth() + 1) + "-" + current_Checkoutdatetime.getDate() + " " + current_Checkoutdatetime.getHours() + ":" + current_Checkoutdatetime.getMinutes() + ":" + current_Checkoutdatetime.getSeconds();
         }
 
-        // console.log(formatted_date);
-        // console.log(formattedcheckout_date);
-
         let encoded = "checkinTime=" + formatted_date +
             "&roomClass=" + roomClass +
             "&options=" + options +
+            "&token=" + cookie.load('tokenTBh') +
             "&totalOptionPrice=" + totalOptionPrice +
             "&checkoutTime=" + formattedcheckout_date;
         let result = '';
         if (action == "getTotalConfirm") {
-            await fetch('https://script.google.com/macros/s/AKfycbyYHV6fvlROAM9_EeLkFT12n4SCXxWMLmeOuiVEwwOu65a9TMDGLl5hp6AeasnsYsbG/exec?func=checkoutinfo', {
+            await fetch('https://script.google.com/macros/s/AKfycbxb7Uowm3MLV6UcbBK1rZ73wy8SXq44F-ZJhFChgkZJEXM5EpSO_MUckOvrxZf9MAch/exec?func=checkoutinfo', {
                 method: 'POST',
                 body: encoded,
                 headers: {
@@ -389,12 +391,12 @@ export class RoomDetailCheckin extends React.Component {
                 let msgerr = '';
 
                 await response.json().then(function (data) {
-                    data['result'] == 'error' ? msgerr = JSON.stringify(data["error"]["message"]) : result = data['data'];
+                    data['result'] == 'error' ? msgerr = (JSON.stringify(data["error"]["message"]) + JSON.stringify(data["error"])) : result = data['data'];
                 });
                 let stt = response.status;
                 if (stt == 200) {
                     if (!msgerr) {
-                        console.log(result);
+
                     } else {
                         toast.error("Error:" + JSON.stringify(msgerr));
                     }
@@ -441,10 +443,10 @@ export class RoomDetailCheckin extends React.Component {
                         <Statistic.Label>vnd</Statistic.Label>
                     </Statistic>.
                 </Modal.Header>
-                <Modal.Content image scrolling style={{height: '450%'}}>
+                <Modal.Content image scrolling style={{height: '2000%'}}>
                     <Image size='large' src={imgsrc} wrapped>
-                        <Form>
-                            <TextArea placeholder='Ghi chú...' style={{minHeight: 100}}
+                        <Form style={{height: '21%'}}>
+                            <TextArea placeholder='Ghi chú...' style={{minHeight: 100, height: '600%'}}
                                       value={this.state.noteText} onChange={(event, data) => {
                                 this.setState({noteText: data.value})
                             }}/>
@@ -453,11 +455,11 @@ export class RoomDetailCheckin extends React.Component {
                     <Modal.Description style={{width: '100%'}}>
                         <Header>{roominfo.roomDescription}</Header>
                         <b>
-                            Status: {this.getStatusDes(roominfo.status)}
+                            Trạng thái: {this.getStatusDes(roominfo.status)}
                         </b>
                         <hr/>
                         <label>
-                            <b>Checkin:</b>
+                            <b>Giờ vào:</b>
                         </label>
                         <div>
                             {!isMobile.iOS() ? <DateTimePicker value={this.state.CheckinTimeSelected}
@@ -474,7 +476,7 @@ export class RoomDetailCheckin extends React.Component {
                         <Segment padded style={{display: this.props.roominfo.status == 0 ? '' : 'none'}}>
                             <div>
                                 <label>
-                                    <b style={{color: "#00bfff"}}>CheckOut:</b>
+                                    <b style={{color: "#00bfff"}}>Giờ ra:</b>
                                 </label>
                                 {!isMobile.iOS() ? <DateTimePicker value={this.state.CheckoutTimeSelected}
                                                                    onChange={this.onChangePickedCheckoutTime}/> :
@@ -490,37 +492,36 @@ export class RoomDetailCheckin extends React.Component {
                                 <br/>
                                 <Button primary style={{float: 'left', width: '45%'}} size="large"
                                         onClick={this.getCheckoutInfo} disabled={this.state.isSubmiting}>
-                                    Check Price:
+                                    Tính tiền phòng:
                                 </Button>
                                 {this.state.isSubmiting ?
                                     <Input size='large' loading icon='user' disabled
                                            value={formatNumber(this.state.checkoutInfo.totalRoomPrice)}
                                            label={{basic: true, content: 'vnd'}}
-                                           labelPosition='right'
-                                           iconPosition='left' style={{width: "40%"}} placeholder='Search...'/>
+                                           labelPosition='right corner'
+                                           iconPosition='left' style={{width: "53%"}} placeholder='...vnd'/>
                                     :
                                     <Input size="large" icon='money bill alternate outline' disabled
                                            value={formatNumber(this.state.checkoutInfo.totalRoomPrice)}
                                            label={{basic: true, content: 'vnd'}}
-                                           labelPosition='right'
-                                           iconPosition='left' style={{width: "40%"}} placeholder='Search...'/>
+                                           labelPosition='right corner'
+                                           iconPosition='left' style={{width: "53%"}} placeholder='...vnd'/>
                                 }
                             </div>
                         </Segment>
                         <hr/>
                         <div>
                             <label>
-                                <b>Room Type:</b>
+                                <b>Loại phòng:</b>
                             </label>
                             <Form.Select
                                 fluid
                                 icon=''
                                 size="huge"
-                                // label='Room Type:'
                                 value={this.state.roomCurrentClass}
                                 options={roomTypeOther}
                                 onChange={this.handleChangeTypeIDSelect}
-                                placeholder='Type'
+                                placeholder='Chọn loại phòng...'
                             />
                         </div>
                         <hr/>
@@ -533,17 +534,17 @@ export class RoomDetailCheckin extends React.Component {
                                     optionListSelected={this.state.optionListSelected ? this.state.optionListSelected : []}/>
                     </Modal.Description>
                 </Modal.Content>
-                <Modal.Actions>
+                <Modal.Actions style={{marginTop: '150px'}}>
                     <Button primary onClick={this.show}
-                            disabled={this.state.isSubmiting || this.state.checkoutInfo.totalPrice == 0}
+                            disabled={this.state.isSubmiting || this.state.checkoutInfo.totalRoomPrice == 0}
                             style={{display: (this.props.roominfo.status == 0 ? '' : 'none')}}>
                         CheckOut
                     </Button>
                     <Button primary onClick={this.checkinRoomSubmit} disabled={this.state.isSubmiting}>
-                        {this.props.roominfo.status == 1 ? "CheckIn" : "Update"}
+                        {this.props.roominfo.status == 1 ? "CheckIn" : "Cập nhật"}
                     </Button>
                     <Button primary onClick={this.handleHideModal} disabled={this.state.isSubmiting}>
-                        Close
+                        Đóng
                     </Button>
                 </Modal.Actions>
                 <Confirm
@@ -595,7 +596,7 @@ export class RoomDetailCheckin extends React.Component {
                             </Segment>
                         </div>
                     }
-                    header='Confirm CheckOut'
+                    header='Kiểm tra & xác nhận'
                     onCancel={this.handleCancel}
                     onConfirm={this.checkoutRoomSubmit}
                 />
