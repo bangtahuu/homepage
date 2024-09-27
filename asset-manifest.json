@@ -1,22 +1,26 @@
 {
   "files": {
-    "main.css": "/hotel/static/css/main.2c9c0a14.chunk.css",
-    "main.js": "/hotel/static/js/main.5324845a.chunk.js",
-    "main.js.map": "/hotel/static/js/main.5324845a.chunk.js.map",
-    "runtime-main.js": "/hotel/static/js/runtime-main.e8220722.js",
-    "runtime-main.js.map": "/hotel/static/js/runtime-main.e8220722.js.map",
-    "static/js/2.9f68f71b.chunk.js": "/hotel/static/js/2.9f68f71b.chunk.js",
-    "static/js/2.9f68f71b.chunk.js.map": "/hotel/static/js/2.9f68f71b.chunk.js.map",
-    "index.html": "/hotel/index.html",
-    "precache-manifest.3befbfb36bf9b83faf860fc499eea649.js": "/hotel/precache-manifest.3befbfb36bf9b83faf860fc499eea649.js",
-    "service-worker.js": "/hotel/service-worker.js",
-    "static/css/main.2c9c0a14.chunk.css.map": "/hotel/static/css/main.2c9c0a14.chunk.css.map",
-    "static/media/logo.svg": "/hotel/static/media/logo.25bf045c.svg"
+    "main.css": "/homepage/static/css/main.2c9c0a14.chunk.css",
+    "main.js": "/homepage/static/js/main.6ca52d8c.chunk.js",
+    "main.js.map": "/homepage/static/js/main.6ca52d8c.chunk.js.map",
+    "runtime-main.js": "/homepage/static/js/runtime-main.beed1c16.js",
+    "runtime-main.js.map": "/homepage/static/js/runtime-main.beed1c16.js.map",
+    "static/css/2.d140657c.chunk.css": "/homepage/static/css/2.d140657c.chunk.css",
+    "static/js/2.7171f9b7.chunk.js": "/homepage/static/js/2.7171f9b7.chunk.js",
+    "static/js/2.7171f9b7.chunk.js.map": "/homepage/static/js/2.7171f9b7.chunk.js.map",
+    "index.html": "/homepage/index.html",
+    "precache-manifest.61d65667b1ff58e3273b63b8ec6b3a6c.js": "/homepage/precache-manifest.61d65667b1ff58e3273b63b8ec6b3a6c.js",
+    "service-worker.js": "/homepage/service-worker.js",
+    "static/css/2.d140657c.chunk.css.map": "/homepage/static/css/2.d140657c.chunk.css.map",
+    "static/css/main.2c9c0a14.chunk.css.map": "/homepage/static/css/main.2c9c0a14.chunk.css.map",
+    "static/media/semantic.min.css": "/homepage/static/media/outline-icons.ef60a4f6.woff",
+    "static/media/react-widgets.css": "/homepage/static/media/rw-widgets.eceddf47.ttf"
   },
   "entrypoints": [
-    "static/js/runtime-main.e8220722.js",
-    "static/js/2.9f68f71b.chunk.js",
+    "static/js/runtime-main.beed1c16.js",
+    "static/css/2.d140657c.chunk.css",
+    "static/js/2.7171f9b7.chunk.js",
     "static/css/main.2c9c0a14.chunk.css",
-    "static/js/main.5324845a.chunk.js"
+    "static/js/main.6ca52d8c.chunk.js"
   ]
 }
