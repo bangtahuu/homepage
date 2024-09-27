@@ -1,10 +1,11 @@
 {
-  "name": "hotel",
+  "name": "homepage",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://bangtahuu.github.io/hotel/",
+  "homepage": "https://bangtahuu.github.io/homepage/",
   "dependencies": {
     "bootstrap": "^4.3.1",
+    "cors": "^2.8.5",
     "gh-pages": "^2.1.1",
     "globalize": "^1.4.2",
     "moment": "^2.24.0",

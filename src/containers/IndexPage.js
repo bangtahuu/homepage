@@ -73,7 +73,7 @@ export class IndexPage extends React.Component {
         this.setState({
             isLoadedRooms: false,
         });
-        await fetch("https://script.google.com/macros/s/AKfycby1NCjArXNvliviV9Su8imyfVXsNTUL2memG4bxJhX4JTcyoXGr/exec?func=listRoomsDetail")
+        await fetch("https://script.google.com/macros/s/AKfycbyYHV6fvlROAM9_EeLkFT12n4SCXxWMLmeOuiVEwwOu65a9TMDGLl5hp6AeasnsYsbG/exec?func=listRoomsDetail")
             .then(res => res.json())
             .then(
                 (result) => {
@@ -118,7 +118,7 @@ export class IndexPage extends React.Component {
     }
 
     getListStatus() {
-        fetch("https://script.google.com/macros/s/AKfycby1NCjArXNvliviV9Su8imyfVXsNTUL2memG4bxJhX4JTcyoXGr/exec?func=listStatus")
+        fetch("https://script.google.com/macros/s/AKfycbyYHV6fvlROAM9_EeLkFT12n4SCXxWMLmeOuiVEwwOu65a9TMDGLl5hp6AeasnsYsbG/exec?func=listStatus")
             .then(res => res.json())
             .then(
                 (result) => {
@@ -149,7 +149,7 @@ export class IndexPage extends React.Component {
     }
 
     getlistoption() {
-        fetch("https://script.google.com/macros/s/AKfycby1NCjArXNvliviV9Su8imyfVXsNTUL2memG4bxJhX4JTcyoXGr/exec?func=listoption")
+        fetch("https://script.google.com/macros/s/AKfycbyYHV6fvlROAM9_EeLkFT12n4SCXxWMLmeOuiVEwwOu65a9TMDGLl5hp6AeasnsYsbG/exec?func=listoption")
             .then(res => res.json())
             .then(
                 (result) => {
@@ -175,7 +175,7 @@ export class IndexPage extends React.Component {
     }
 
     getroomTypeOther() {
-        fetch("https://script.google.com/macros/s/AKfycby1NCjArXNvliviV9Su8imyfVXsNTUL2memG4bxJhX4JTcyoXGr/exec?func=PricebyOther")
+        fetch("https://script.google.com/macros/s/AKfycbyYHV6fvlROAM9_EeLkFT12n4SCXxWMLmeOuiVEwwOu65a9TMDGLl5hp6AeasnsYsbG/exec?func=PricebyOther")
             .then(res => res.json())
             .then(
                 (result) => {
@@ -221,7 +221,7 @@ export class IndexPage extends React.Component {
             "&noteText=" + noteText +
             "&totalOptionPrice=" + totalOptionPrice;
 
-        await fetch('https://script.google.com/macros/s/AKfycby1NCjArXNvliviV9Su8imyfVXsNTUL2memG4bxJhX4JTcyoXGr/exec?func=checkin&id=' + id, {
+        await fetch('https://script.google.com/macros/s/AKfycbyYHV6fvlROAM9_EeLkFT12n4SCXxWMLmeOuiVEwwOu65a9TMDGLl5hp6AeasnsYsbG/exec?func=checkin&id=' + id, {
             method: 'POST',
             body: encoded,
             headers: {
@@ -289,7 +289,7 @@ export class IndexPage extends React.Component {
             "&checkoutTime=" + formattedcheckout_date;
 
         if (action == "checkout") {
-            await fetch('https://script.google.com/macros/s/AKfycby1NCjArXNvliviV9Su8imyfVXsNTUL2memG4bxJhX4JTcyoXGr/exec?func=checkout&id=' + id, {
+            await fetch('https://script.google.com/macros/s/AKfycbyYHV6fvlROAM9_EeLkFT12n4SCXxWMLmeOuiVEwwOu65a9TMDGLl5hp6AeasnsYsbG/exec?func=checkout&id=' + id, {
                 method: 'POST',
                 body: encoded,
                 headers: {
@@ -469,9 +469,13 @@ export class IndexPage extends React.Component {
 
         fetch("https://api.ipify.org/?format=json", {
             method: "GET",
+            mode: 'cors',
             // body: JSON.stringify(data),
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS');",
+                "Access-Control-Allow-Headers": "Content-Type"
             },
         }).then(res => res.json())
             .then(

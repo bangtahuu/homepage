@@ -83,7 +83,7 @@ export class LoginPage extends React.Component {
 
         console.log(encoded);
         let isValid = false;
-        fetch('https://script.google.com/macros/s/AKfycby1NCjArXNvliviV9Su8imyfVXsNTUL2memG4bxJhX4JTcyoXGr/exec?func=verifyemail', {
+        fetch('https://script.google.com/macros/s/AKfycbyYHV6fvlROAM9_EeLkFT12n4SCXxWMLmeOuiVEwwOu65a9TMDGLl5hp6AeasnsYsbG/exec?func=verifyemail', {
             method: 'POST',
             body: encoded,
             headers: {"Content-type": "application/x-www-form-urlencoded"}
@@ -127,7 +127,7 @@ export class LoginPage extends React.Component {
         console.log(encoded);
         let isValid = false;
         let token = "";
-        fetch('https://script.google.com/macros/s/AKfycby1NCjArXNvliviV9Su8imyfVXsNTUL2memG4bxJhX4JTcyoXGr/exec?func=login', {
+        fetch('https://script.google.com/macros/s/AKfycbyYHV6fvlROAM9_EeLkFT12n4SCXxWMLmeOuiVEwwOu65a9TMDGLl5hp6AeasnsYsbG/exec?func=login', {
             method: 'POST',
             body: encoded,
             headers: {
