@@ -31,7 +31,6 @@ class CostReporting extends Component {
 
         return (
             <div>
-                <h1>React Doughnut Chart</h1>
                 <CanvasJSChart options = {options}
                     /* onRef={ref => this.chart = ref} */
                 />

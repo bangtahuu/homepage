@@ -69,7 +69,7 @@ export class IndexPage extends React.Component {
         this.setState({
             isLoadedRooms: false,
         });
-        await fetch("https://script.google.com/macros/s/AKfycbxb7Uowm3MLV6UcbBK1rZ73wy8SXq44F-ZJhFChgkZJEXM5EpSO_MUckOvrxZf9MAch/exec?func=listRoomsDetail&token=" + this.props.userInfo.token)
+        await fetch("https://script.google.com/macros/s/AKfycbxwdrVrY7_Vx56rtRuGJSaGP2mj_M1OhYlr_oe45JRmhLsj3P9NMly81nhMofWHefct/exec?func=listRoomsDetail&token=" + this.props.userInfo.token)
             .then(res => res.json())
             .then(
                 (result) => {
@@ -112,7 +112,7 @@ export class IndexPage extends React.Component {
     }
 
     getListStatus() {
-        fetch("https://script.google.com/macros/s/AKfycbxb7Uowm3MLV6UcbBK1rZ73wy8SXq44F-ZJhFChgkZJEXM5EpSO_MUckOvrxZf9MAch/exec?func=listStatus&token=" + this.props.userInfo.token)
+        fetch("https://script.google.com/macros/s/AKfycbxwdrVrY7_Vx56rtRuGJSaGP2mj_M1OhYlr_oe45JRmhLsj3P9NMly81nhMofWHefct/exec?func=listStatus&token=" + this.props.userInfo.token)
             .then(res => res.json())
             .then(
                 (result) => {
@@ -143,7 +143,7 @@ export class IndexPage extends React.Component {
     }
 
     getlistoption() {
-        fetch("https://script.google.com/macros/s/AKfycbxb7Uowm3MLV6UcbBK1rZ73wy8SXq44F-ZJhFChgkZJEXM5EpSO_MUckOvrxZf9MAch/exec?func=listoption&token=" + this.props.userInfo.token)
+        fetch("https://script.google.com/macros/s/AKfycbxwdrVrY7_Vx56rtRuGJSaGP2mj_M1OhYlr_oe45JRmhLsj3P9NMly81nhMofWHefct/exec?func=listoption&token=" + this.props.userInfo.token)
             .then(res => res.json())
             .then(
                 (result) => {
@@ -169,7 +169,7 @@ export class IndexPage extends React.Component {
     }
 
     getroomTypeOther() {
-        fetch("https://script.google.com/macros/s/AKfycbxb7Uowm3MLV6UcbBK1rZ73wy8SXq44F-ZJhFChgkZJEXM5EpSO_MUckOvrxZf9MAch/exec?func=PricebyOther&token=" + this.props.userInfo.token)
+        fetch("https://script.google.com/macros/s/AKfycbxwdrVrY7_Vx56rtRuGJSaGP2mj_M1OhYlr_oe45JRmhLsj3P9NMly81nhMofWHefct/exec?func=PricebyOther&token=" + this.props.userInfo.token)
             .then(res => res.json())
             .then(
                 (result) => {
@@ -215,7 +215,7 @@ export class IndexPage extends React.Component {
             "&token=" + this.props.userInfo.token +
             "&totalOptionPrice=" + totalOptionPrice;
 
-        await fetch('https://script.google.com/macros/s/AKfycbxb7Uowm3MLV6UcbBK1rZ73wy8SXq44F-ZJhFChgkZJEXM5EpSO_MUckOvrxZf9MAch/exec?func=checkin&id=' + id, {
+        await fetch('https://script.google.com/macros/s/AKfycbxwdrVrY7_Vx56rtRuGJSaGP2mj_M1OhYlr_oe45JRmhLsj3P9NMly81nhMofWHefct/exec?func=checkin&id=' + id, {
             method: 'POST',
             body: encoded,
             headers: {
@@ -269,7 +269,7 @@ export class IndexPage extends React.Component {
             "&checkoutTime=" + formattedcheckout_date;
 
         if (action == "checkout") {
-            await fetch('https://script.google.com/macros/s/AKfycbxb7Uowm3MLV6UcbBK1rZ73wy8SXq44F-ZJhFChgkZJEXM5EpSO_MUckOvrxZf9MAch/exec?func=checkout&id=' + id, {
+            await fetch('https://script.google.com/macros/s/AKfycbxwdrVrY7_Vx56rtRuGJSaGP2mj_M1OhYlr_oe45JRmhLsj3P9NMly81nhMofWHefct/exec?func=checkout&id=' + id, {
                 method: 'POST',
                 body: encoded,
                 headers: {

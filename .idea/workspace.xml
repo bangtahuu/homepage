@@ -6,19 +6,16 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/TB_Hotel.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/TB_Hotel.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/ConfirmFinalMessage.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/ListOption.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ListOption.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/ListRoomRows.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ListRoomRows.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/RoomDetailCheckin.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/RoomDetailCheckin.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/RoomDetailCheckout.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/RoomDetailModel.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/SearchingTab.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Toastr.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/admin/report/CostReporting.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/admin/report/CostReporting.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/admin/report/MainReportPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/admin/report/MainReportPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/admin/report/ProductOptionUsing.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/admin/report/ProductOptionUsing.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/containers/AdminPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/containers/AdminPage.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/containers/IndexPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/containers/IndexPage.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/containers/LoginPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/containers/LoginPage.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test.js" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -51,7 +48,7 @@
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/components/admin/report" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.standard" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -65,15 +62,15 @@
     <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/components/admin/report" />
+      <recent name="$PROJECT_DIR$/public/assets/js" />
       <recent name="$PROJECT_DIR$/src/components" />
       <recent name="$PROJECT_DIR$/src" />
       <recent name="$PROJECT_DIR$/public/assets/css" />
-      <recent name="$PROJECT_DIR$/public/images" />
-      <recent name="$PROJECT_DIR$/public" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -108,7 +105,11 @@
       <workItem from="1572836712608" duration="145000" />
       <workItem from="1572836887461" duration="41310000" />
       <workItem from="1572968195748" duration="5361000" />
-      <workItem from="1727409888356" duration="26729000" />
+      <workItem from="1727409888356" duration="38286000" />
+      <workItem from="1727683754549" duration="29432000" />
+      <workItem from="1727774547138" duration="597000" />
+      <workItem from="1727838123851" duration="4826000" />
+      <workItem from="1727930566902" duration="77000" />
     </task>
     <servers />
   </component>
@@ -120,7 +121,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>

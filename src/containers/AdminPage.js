@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import 'semantic-ui-css/semantic.min.css';
 import {
     Dimmer, Image,
-    Loader, Segment, Menu, Icon, Button
+    Loader, Segment, Menu, Icon, Button, Dropdown
 } from 'semantic-ui-react';
 import cookie from 'react-cookies';
 import Table from 'react-bootstrap/Table';
@@ -13,6 +13,12 @@ import MainReportPage from '../components/admin/report/MainReportPage';
 import {toast} from 'react-toastify';
 import {ToastContainer} from "react-toastify";
 import {encrypt} from "../components/sha256";
+import {
+    YearInput,
+    MonthInput, DateInput,
+    MonthInputProps, MonthInputOnChangeData
+} from 'semantic-ui-calendar-react';
+
 const http = require('http');
 
 const isMobile = {
@@ -60,7 +66,10 @@ export class AdminPage extends React.Component {
             headerRow: [],
             bodyRow: [],
             isDataLoaded: false,
-            isSubmiting: false
+            isSubmiting: false,
+            year: '',
+            month: '',
+            date: ""
         };
         [
             'checkTokenValid',
@@ -155,7 +164,7 @@ export class AdminPage extends React.Component {
             "&ipAddress=" + ipAddress;
 
         let isValid = false;
-        fetch('https://script.google.com/macros/s/AKfycbxb7Uowm3MLV6UcbBK1rZ73wy8SXq44F-ZJhFChgkZJEXM5EpSO_MUckOvrxZf9MAch/exec?func=checkToken', {
+        fetch('https://script.google.com/macros/s/AKfycbxwdrVrY7_Vx56rtRuGJSaGP2mj_M1OhYlr_oe45JRmhLsj3P9NMly81nhMofWHefct/exec?func=checkToken', {
             method: 'POST',
             body: encoded,
             headers: {
@@ -201,25 +210,46 @@ export class AdminPage extends React.Component {
         this.setState({
             isDataLoaded: false,
         });
-        fetch("https://script.google.com/macros/s/AKfycbxb7Uowm3MLV6UcbBK1rZ73wy8SXq44F-ZJhFChgkZJEXM5EpSO_MUckOvrxZf9MAch/exec?func=" + action + "&token=" + this.state.userInfo.token)
+        let yearMonth = "";
+        if (action == "invoiceList") {
+            yearMonth = this.state.date.substring(6, 10) + this.state.date.substring(3, 5);
+        }
+
+        fetch("https://script.google.com/macros/s/AKfycbxwdrVrY7_Vx56rtRuGJSaGP2mj_M1OhYlr_oe45JRmhLsj3P9NMly81nhMofWHefct/exec?func=" + action + "&token=" + this.state.userInfo.token + "&yearmonth=" + yearMonth)
             .then(res => res.json())
             .then(
                 (result) => {
-                    let strs = [];
-                    let tmp = [];
-                    for (let i = 0; i < result.length; i++) {
-                        tmp = JSON.parse(result[i])
-                        strs.push(tmp);
+                    let isErr = false;
+                    if (result.hasOwnProperty("result")) {
+                        if (result["result"] == "error") {
+                            toast.error(result["error"]);
+                            isErr = true;
+                        }
                     }
-                    // strs = new Set(strs);
-                    strs = Array.from(new Set(strs.map(JSON.stringify))).map(JSON.parse);
-                    let rowheader = Object.keys(strs[0]);
+                    if (isErr) {
+                        this.setState({
+                            isDataLoaded: true,
+                            headerRow: [],
+                            bodyRow: []
+                        });
+                    } else {
+                        let strs = [];
+                        let tmp = [];
+                        for (let i = 0; i < result.length; i++) {
+                            tmp = JSON.parse(result[i])
+                            strs.push(tmp);
+                        }
 
-                    this.setState({
-                        isDataLoaded: true,
-                        headerRow: rowheader,
-                        bodyRow: strs
-                    });
+                        // strs = new Set(strs);
+                        strs = Array.from(new Set(strs.map(JSON.stringify))).map(JSON.parse);
+                        let rowheader = Object.keys(strs[0]);
+
+                        this.setState({
+                            isDataLoaded: true,
+                            headerRow: rowheader,
+                            bodyRow: strs
+                        });
+                    }
                 }, (error) => {
                     console.log(error);
                     this.setState({
@@ -252,6 +282,12 @@ export class AdminPage extends React.Component {
             case "User":
                 this.getListAdminEdit("listUser");
                 break;
+            case "WarehouseEntry":
+                // this.getListAdminEdit("invoiceList");
+                this.setState({
+                    isDataLoaded: true
+                });
+                break;
         }
     }
 
@@ -262,7 +298,7 @@ export class AdminPage extends React.Component {
             headerRow: []
         });
 
-        if (name.match(/Hotel|FoodOption|RoomPrice|RoomsType|User|/i)) {
+        if (name.match(/Hotel|FoodOption|RoomPrice|RoomsType|User|WarehouseEntry/i)) {
             this.getDataAdminByAction(name);
         }
     }
@@ -300,7 +336,7 @@ export class AdminPage extends React.Component {
     }
 
     addItemProduct() {
-        if (!(this.state.activeItem == 'Hotel' || this.state.activeItem == 'FoodOption' || this.state.activeItem == 'RoomsType')) {
+        if (!(this.state.activeItem == 'Hotel' || this.state.activeItem == 'FoodOption' || this.state.activeItem == 'RoomsType' || this.state.activeItem == 'WarehouseEntry')) {
             toast.error("Liên hệ với Bangth để thêm.");
             return;
         }
@@ -346,9 +382,10 @@ export class AdminPage extends React.Component {
 
         let encoded = "jsonDataEncode=" + jsonString +
             "&token=" + this.state.userInfo.token +
+            "&yearmonth=" + this.state.date.substring(6, 10) + this.state.date.substring(3, 5) +
             "&activeItem=" + this.state.activeItem;
 
-        fetch('https://script.google.com/macros/s/AKfycbxb7Uowm3MLV6UcbBK1rZ73wy8SXq44F-ZJhFChgkZJEXM5EpSO_MUckOvrxZf9MAch/exec?func=adminUpdateParam', {
+        fetch('https://script.google.com/macros/s/AKfycbxwdrVrY7_Vx56rtRuGJSaGP2mj_M1OhYlr_oe45JRmhLsj3P9NMly81nhMofWHefct/exec?func=adminUpdateParam', {
             method: 'POST',
             body: encoded,
             headers: {
@@ -377,48 +414,72 @@ export class AdminPage extends React.Component {
         })
     }
 
+    handleChange = (event, {name, value}) => {
+        if (this.state.hasOwnProperty(name)) {
+            this.setState({[name]: value}, () => {
+                this.getListAdminEdit("invoiceList");
+            });
+        }
+    }
+
     renderProductList() {
         return (
-            <Table responsive bordered hover style={{height: '300px'}}>
-                <thead>
-                <tr key="header">
-                    <th>
-                        <Button.Group
-                            style={{display: (this.state.activeItem == 'Hotel' || this.state.activeItem == 'FoodOption' || this.state.activeItem == 'RoomsType') ? '' : 'none'}}>
-                            <Button positive inverted color='teal'
-                                    onClick={this.addItemProduct}>
-                                Thêm
-                            </Button>
-                            {/*<Button.Or/>*/}
-                            {/*<Button inverted color='grey'>Delete</Button>*/}
-                        </Button.Group>
-                    </th>
-                    {this.state.headerRow.map(item => {
-                        return <th key={item}>{item}</th>
-                    })
+            <div>
+                <Table responsive bordered hover style={{height: '300px'}}>
+                    <thead>
+                    {this.state.activeItem == 'WarehouseEntry' &&
+                    <tr key="header">
+                        <th>
+                            <DateInput
+                                name="date"
+                                // dateFormat="yyyyMM"
+                                placeholder="Chọn ngày nhập"
+                                value={this.state.date}
+                                iconPosition="left"
+                                onChange={this.handleChange}
+                            />
+                        </th>
+                    </tr>
                     }
-                </tr>
-                </thead>
-                <tbody>
-                {
-                    this.state.bodyRow.map(item => {
-                        return <RowRender onChange={this.handleChangeRowValue}
-                                          onDelete={this.handleDeleteRow}
-                                          headerRow={this.state.headerRow}
-                                          onAction={this.handleAction}
-                                          activeItem={this.state.activeItem}
-                                          key={item + Math.random()}>{item}</RowRender>
-                    })
-                }
-                </tbody>
-                <tfoot>
-                <tr>
-                    <td colSpan={this.state.headerRow.length + 1} hidden={this.state.headerRow.length <= 0}
-                        onClick={this.handleSubmitAllChange}><Button
-                        primary>Lưu tất cả thay đổi</Button></td>
-                </tr>
-                </tfoot>
-            </Table>
+                    <tr key="header">
+                        <th>
+                            <Button.Group
+                                style={{display: (this.state.activeItem == 'Hotel' || this.state.activeItem == 'FoodOption' || this.state.activeItem == 'RoomsType' || this.state.activeItem == 'WarehouseEntry') ? '' : 'none'}}>
+                                <Button positive inverted color='teal'
+                                        onClick={this.addItemProduct}>
+                                    Thêm
+                                </Button>
+                            </Button.Group>
+                        </th>
+                        {this.state.headerRow.map(item => {
+                            return <th key={item}>{item}</th>
+                        })
+                        }
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {
+                        this.state.bodyRow.map(item => {
+                            return <RowRender onChange={this.handleChangeRowValue}
+                                              onDelete={this.handleDeleteRow}
+                                              headerRow={this.state.headerRow}
+                                              onAction={this.handleAction}
+                                              activeItem={this.state.activeItem}
+                                              key={item + Math.random()}>{item}</RowRender>
+                        })
+                    }
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colSpan={this.state.headerRow.length + 1} hidden={this.state.headerRow.length <= 0}>
+                            <Button onClick={this.handleSubmitAllChange}
+                                    primary>Lưu tất cả thay đổi
+                            </Button>
+                        </td>
+                    </tr>
+                    </tfoot>
+                </Table>
+            </div>
         );
     }
 
@@ -427,7 +488,7 @@ export class AdminPage extends React.Component {
         return (
             <Segment>
                 <ToastContainer style={{fontSize: '20px', textAlign: 'center'}}/>
-                <Menu tabular widths="5" icon='labeled'
+                <Menu tabular widths="6" icon='labeled'
                       size={isMobile.CheckDevices().match(/Windows|Mac/i) ? 'massive' : 'mini'} compact>
                     <Menu.Item
                         name='Hotel'
@@ -468,6 +529,14 @@ export class AdminPage extends React.Component {
                     >
                         <Icon name=''><i className="fas fa-user-shield"></i></Icon>
                         User
+                    </Menu.Item>
+                    <Menu.Item
+                        name='WarehouseEntry'
+                        active={activeItem === 'WarehouseEntry'}
+                        onClick={this.handleItemClick}
+                    >
+                        <Icon name=''><i className="fa-solid fa-warehouse"></i></Icon>
+                        Nhập kho
                     </Menu.Item>
                 </Menu>
                 {this.state.activeItem.length > 0 &&
@@ -617,3 +686,42 @@ CollRender.propTypes = {
     onChangeValue: PropTypes.func
 }
 AdminPage.propTypes = {}
+
+class MonthYearForm extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            year: '',
+            month: '',
+        }
+    }
+
+    handleChange = (event, {name, value}) => {
+        if (this.state.hasOwnProperty(name)) {
+            this.setState({[name]: value});
+        }
+    }
+
+    render() {
+        return (
+            <>
+                <YearInput
+                    inline
+                    className='example-calendar-input'
+                    value={this.state.year}
+                    name='year'
+                    onChange={this.handleChange}
+                />
+                <br/>
+                <MonthInput
+                    inline
+                    className='example-calendar-input'
+                    value={this.state.month}
+                    name='month'
+                    onChange={this.handleChange}
+                />
+            </>
+        )
+    }
+}

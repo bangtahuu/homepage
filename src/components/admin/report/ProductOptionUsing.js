@@ -5,9 +5,21 @@ import {ListRoomRows} from "../../ListRoomRows";
 
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 var CanvasJS = CanvasJSReact.CanvasJS;
+
 function formatNumber(num) {
     return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
 }
+
+function explodePie(e) {
+    if (typeof (e.dataSeries.dataPoints[e.dataPointIndex].exploded) === "undefined" || !e.dataSeries.dataPoints[e.dataPointIndex].exploded) {
+        e.dataSeries.dataPoints[e.dataPointIndex].exploded = true;
+    } else {
+        e.dataSeries.dataPoints[e.dataPointIndex].exploded = false;
+    }
+    e.chart.render();
+
+}
+
 class ProductOptionUsing extends Component {
     addSymbols(e) {
         var suffixes = ["", "K", "M", "B"];
@@ -24,17 +36,38 @@ class ProductOptionUsing extends Component {
             total = total + this.props.optionLst[i].y;
         }
 
+        let chart = {
+            exportEnabled: true,
+            animationEnabled: true,
+            title: {
+                text: "Tỷ lệ %",
+            },
+            legend: {
+                cursor: "pointer",
+                itemclick: explodePie
+            },
+            data: [{
+                type: "pie",
+                showInLegend: true,
+                toolTipContent: "{name}: <strong>{y}%</strong>",
+                indexLabel: "{name} - {y}%",
+                dataPoints: this.props.optionLstPie.length > 0 ? this.props.optionLstPie : [
+                    {y: 100, name: "nothing", exploded: true}
+                ]
+            }]
+        };
+
         // debugger;
         const options = {
             animationEnabled: true,
             theme: "light2",
             title: {
-                text: "Doanh thu từ các loại sản phẩm"
+                text: "Tổng: " + formatNumber(total) + " vnd"
             },
-            axisX: {
-                title: "Total: " + formatNumber(total) + " vnd",
-                reversed: true,
-            },
+            // axisX: {
+            //     title: "Total: " + formatNumber(total) + " vnd",
+            //     reversed: true,
+            // },
             axisY: {
                 title: "VND",
                 labelFormatter: this.addSymbols
@@ -57,10 +90,22 @@ class ProductOptionUsing extends Component {
             <div>
                 <br/>
                 <hr/>
+                <h1>Doanh thu theo sản phẩm</h1>
+                <table>
+                    <tr>
+                        <td>
+                            <CanvasJSChart options={options}
+                                /* onRef={ref => this.chart = ref} */
+                            />
+                        </td>
+                        <td>
+                            <CanvasJSChart options={chart}
+                                /* onRef={ref => this.chart = ref} */
+                            />
+                        </td>
+                    </tr>
+                </table>
 
-                <CanvasJSChart options={options}
-                    /* onRef={ref => this.chart = ref} */
-                />
                 {/*You can get reference to the chart instance as shown above using onRef. This allows you to access all chart properties and methods*/}
             </div>
         );
@@ -69,7 +114,8 @@ class ProductOptionUsing extends Component {
 }
 
 ProductOptionUsing.propTypes = {
-    optionLst: PropTypes.array
+    optionLst: PropTypes.array,
+    optionLstPie: PropTypes.array
 }
 
 export default ProductOptionUsing;

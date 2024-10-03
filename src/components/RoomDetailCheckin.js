@@ -381,7 +381,7 @@ export class RoomDetailCheckin extends React.Component {
             "&checkoutTime=" + formattedcheckout_date;
         let result = '';
         if (action == "getTotalConfirm") {
-            await fetch('https://script.google.com/macros/s/AKfycbxb7Uowm3MLV6UcbBK1rZ73wy8SXq44F-ZJhFChgkZJEXM5EpSO_MUckOvrxZf9MAch/exec?func=checkoutinfo', {
+            await fetch('https://script.google.com/macros/s/AKfycbxwdrVrY7_Vx56rtRuGJSaGP2mj_M1OhYlr_oe45JRmhLsj3P9NMly81nhMofWHefct/exec?func=checkoutinfo', {
                 method: 'POST',
                 body: encoded,
                 headers: {
